@@ -25,7 +25,7 @@ export class Necklace{
         this.mesh.position.x += 12;
         this.mesh.position.y += -40;
     }
-    static create(objPath='../obj/untitled.obj') {
+    static create(objPath='./obj/untitled.obj') {
         return new Promise((resolve, reject) => {
             const objLoader = new OBJLoader2();
             var loader = objLoader.load(objPath, (root) => {
