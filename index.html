@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    </head>
+    <body>
+        <style>
+            body{
+                font-family: sans-serif;
+/*                max-width: max-content;*/
+                margin: auto;
+            }
+            button {
+                padding:20px;
+                margin-top:10px;
+                margin-left:10px;
+                background-color: #333344;
+                border:0px;
+                border-radius: 10px;
+                width: 100px;
+                height:100px;
+                font-size: 10;
+                font-weight:bold;
+                color:white;
+            }
+            #container {
+                width:500px;
+                height:375px;
+                margin: 0px auto;
+                border: 10px #333 solid;
+                position:relative;
+                border-radius:10px;    
+            }
+            #video{
+                width: 500px;
+                height: 375px;
+                background-color: #666;
+                position:absolute;
+                top:0;
+                left:0;
+            
+            }
+            canvas{
+                width:500px;
+                height:375px;
+                position:absolute;
+                top:0;
+                left:0;
+                z-index:10;
+            }
+            #loading{
+                position:absolute;
+                top:0;
+                left:0;
+            }
+            @keyframes spin { 
+                100% { 
+                    transform: rotate(360deg); 
+                } 
+            } 
+            #center{   
+                border: 12px solid #f3f3f3; 
+                border-radius: 50%; 
+                border-top: 12px solid #444444; 
+                width: 70px; 
+                height: 70px; 
+                animation: spin 1s linear infinite;
+                position: absolute; 
+                top: 0; 
+                bottom: 0; 
+                left: 0; 
+                right: 0; 
+                margin: auto; 
+            }
+        </style>
+        
+<!--        <div id = "center"></div>-->
+        <table>
+            <tr>
+                <td>
+<!--                   <h1>VIDEO TEST</h1>-->
+<!--                    <a href="info.html"><h5>What is this - instructions</h5></a>-->
+                    <div id = "container">
+                        <video autoplay="true" id="video"></video>
+                        <canvas id = "draw" width="500" height="375"></canvas>
+                    </div>
+                </td>
+                <td>
+<!--                    <button id = "landmarkButton">GET LAND MARKS</button>-->
+<!--                    <br>-->
+                    <button id = "stopVideo" >STOP VIDEO</button>
+                    <br>
+                    <button id = "threeJS">Preview 3d model</button> 
+                </td>
+            </tr>
+        </table>
+        
+        
+        
+        <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/facemesh"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/posenet"></script>
+        <script src = "third-party/dat.gui.js"></script>
+        <script src="https://threejs.org/build/three.js"></script>
+        <script src="./third-party/face.js" type="module"></script>
+        <script src="./third-party/geometry.js" type="module"></script>
+        <script src="./third-party/triangulation.js" type="module"></script>
+        <script src="./third-party/OBJLoader.js" type="module"></script>
+        <script src="./js/earringLeft.js" type="module"></script>
+        <script src="./js/earringRight.js" type="module"></script>
+        <script src="./js/necklace.js" type="module"></script>
+        <script src="./js/nosering.js" type="module"></script>
+        <script src="./js/index.js" type="module"></script>
+        
+        
+    </body>
+</html>

@@ -1,0 +1,52 @@
+# Blender MTL File: 'None'
+# Material Count: 4
+
+newmtl Necklace_beruza
+Ns 49.019608
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.540000 0.540000 0.540000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Necklace_v1_L3.123cac85447a-f50a-45fe-a9f2-add34335f861\11783_Necklace_beruza_diff.jpg
+map_Ka Necklace_v1_L3.123cac85447a-f50a-45fe-a9f2-add34335f861\\11783_Necklace_beruza_diff.jpg
+map_Ks Necklace_v1_L3.123cac85447a-f50a-45fe-a9f2-add34335f861\\11783_Necklace_beruza_spec.jpg
+
+newmtl Necklace_biser
+Ns 23.529412
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.540000 0.540000 0.540000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Necklace_v1_L3.123cac85447a-f50a-45fe-a9f2-add34335f861\11783_Necklace_beruza_diff.jpg
+map_Bump Necklace_v1_L3.123cac85447a-f50a-45fe-a9f2-add34335f861\\11783_Necklace_beruza_bump.jpg
+map_Ka Necklace_v1_L3.123cac85447a-f50a-45fe-a9f2-add34335f861\\11783_Necklace_beruza_diff.jpg
+map_Ks Necklace_v1_L3.123cac85447a-f50a-45fe-a9f2-add34335f861\\11783_Necklace_beruza_spec.jpg
+
+newmtl Necklace_metal
+Ns 43.137255
+Ka 0.533333 0.533333 0.533333
+Kd 0.803900 0.521600 0.274500
+Ks 0.540000 0.540000 0.540000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+
+newmtl Necklace_metal_sphere
+Ns 29.411765
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.540000 0.540000 0.540000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Necklace_v1_L3.123cac85447a-f50a-45fe-a9f2-add34335f861\11783_Necklace_metal_diff.jpg
+map_Ka Necklace_v1_L3.123cac85447a-f50a-45fe-a9f2-add34335f861\\11783_Necklace_metal_diff.jpg
+map_Ks Necklace_v1_L3.123cac85447a-f50a-45fe-a9f2-add34335f861\\11783_Necklace_metal_spec.jpg
