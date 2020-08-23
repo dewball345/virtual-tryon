@@ -32,7 +32,7 @@ export class EarringLeft{
         this.mesh.rotation.y = temp;
         this.mesh.position.z = trackLeftPos.position.z + zOff;
     }
-    static create(objPath='../obj/untitled.obj') {
+    static create(objPath='./obj/untitled.obj') {
         return new Promise((resolve, reject) => {
             const objLoader = new OBJLoader2();
             var loader = objLoader.load(objPath, (root) => {
