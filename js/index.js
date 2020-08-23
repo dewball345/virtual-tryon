@@ -296,7 +296,7 @@ async function startThreeJS(){
     
     //createLeftEarring();
     //createRightEarring();
-    var necklace = new Necklace(await Necklace.create("../obj/necklace.obj"));
+    var necklace = new Necklace(await Necklace.create("./obj/necklace.obj"));
     scene.add(necklace.mesh);
     //createNecklace();
     var noseRing = new NoseRing(NoseRing.create());
