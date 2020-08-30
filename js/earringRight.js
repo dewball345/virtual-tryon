@@ -3,12 +3,13 @@ import {OBJLoader2} from 'https://threejsfundamentals.org/threejs/resources/thre
 export class EarringRight{
     constructor(mesh){
         this.mesh = mesh;
+        this.path = "";
     }
-    static create(objPath='./obj/untitled.obj') {
+    static create(objPath) {
         return new Promise((resolve, reject) => {
             const objLoader = new OBJLoader2();
             var loader = objLoader.load(objPath, (root) => {
-                console.log("FUNCTION: " + objLoader.load);
+                //console.log("FUNCTION: " + objLoader.load);
                 var material = new THREE.MeshStandardMaterial({
                       color: 0xff2010,
                       roughness: 0.4,
@@ -18,7 +19,7 @@ export class EarringRight{
                 //console.log(root);
                 root.children[0].material = material;
                 root.scale.setScalar(10);
-                root.name = "left";
+                root.name = objPath;
                 root.castShadow = true; 
                 root.receiveShadow = true;
                 root.rotation.x = -90;
@@ -27,7 +28,14 @@ export class EarringRight{
             });
         });
     }
-    async update({poses, mask, xOff, yOff, zOff, width, height, camera}){
+    async update({poses, mask, xOff, yOff, zOff, width, height, camera, scaleOff, earringPath}){
+        if(earringPath !== this.path){
+            this.path = earringPath;
+            //console.log((await EarringRight.create(earringPath)).children);
+            //console.log(this.mesh.children);
+            this.mesh.children[0].geometry = (await EarringRight.create(earringPath)).children[0].geometry
+            
+        }
         const domToWorld = function(x, y) {
           let newPosition = new THREE.Vector3();
           let normalizedX = (x / width) * 2 - 1;
@@ -60,6 +68,9 @@ export class EarringRight{
         this.mesh.rotation.z = -this.mesh.rotation.y;
         this.mesh.rotation.y = temp;
         this.mesh.position.z = trackLeftPos.position.z + zOff;
+        this.mesh.scale.x = 10 + scaleOff;
+        this.mesh.scale.y = 10 + scaleOff;
+        this.mesh.scale.z = 10 + scaleOff;
     }
     hide(){
         //console.log(this.mesh);

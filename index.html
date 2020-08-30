@@ -3,93 +3,29 @@
     <head>
     </head>
     <body>
-        <style>
-            body{
-                font-family: sans-serif;
-/*                max-width: max-content;*/
-                margin: auto;
-            }
-            button {
-                padding:20px;
-                margin-top:10px;
-                margin-left:10px;
-                background-color: #333344;
-                border:0px;
-                border-radius: 10px;
-                width: 100px;
-                height:100px;
-                font-size: 10;
-                font-weight:bold;
-                color:white;
-            }
-            #container {
-                width:500px;
-                height:375px;
-                margin: 0px auto;
-                border: 10px #333 solid;
-                position:relative;
-                border-radius:10px;    
-            }
-            #video{
-                width: 500px;
-                height: 375px;
-                background-color: #666;
-                position:absolute;
-                top:0;
-                left:0;
-            
-            }
-            canvas{
-                width:500px;
-                height:375px;
-                position:absolute;
-                top:0;
-                left:0;
-                z-index:10;
-            }
-            #loading{
-                position:absolute;
-                top:0;
-                left:0;
-            }
-            @keyframes spin { 
-                100% { 
-                    transform: rotate(360deg); 
-                } 
-            } 
-            #center{   
-                border: 12px solid #f3f3f3; 
-                border-radius: 50%; 
-                border-top: 12px solid #444444; 
-                width: 70px; 
-                height: 70px; 
-                animation: spin 1s linear infinite;
-                position: absolute; 
-                top: 0; 
-                bottom: 0; 
-                left: 0; 
-                right: 0; 
-                margin: auto; 
-            }
-        </style>
+        <link rel="stylesheet" href="style.css">
+
         
 <!--        <div id = "center"></div>-->
         <table>
             <tr>
                 <td>
-<!--                   <h1>VIDEO TEST</h1>-->
-<!--                    <a href="info.html"><h5>What is this - instructions</h5></a>-->
+                   <h1>Jewellery Tryon <span style="font-size:20px">By Abhiraam Eranti</span></h1>
+                    <a href="info.html"><h5>What is this - instructions</h5></a>
                     <div id = "container">
+                        
                         <video autoplay="true" id="video"></video>
-                        <canvas id = "draw" width="500" height="375"></canvas>
+                        <canvas id = "draw" width="700" height="450"></canvas>
+                        <button id = "stopVideo" ><h6>Stop/Pause</h6></button>
+                        <button id = "threeJS"><h6>Play/Resume</h6></button>
                     </div>
                 </td>
                 <td>
 <!--                    <button id = "landmarkButton">GET LAND MARKS</button>-->
 <!--                    <br>-->
-                    <button id = "stopVideo" >STOP VIDEO</button>
+                    
                     <br>
-                    <button id = "threeJS">Preview 3d model</button> 
+                     
                 </td>
             </tr>
         </table>
@@ -111,8 +47,31 @@
         <script src="./js/earringRight.js" type="module"></script>
         <script src="./js/necklace.js" type="module"></script>
         <script src="./js/nosering.js" type="module"></script>
+        <script src="./js/mask.js" type="module"></script>
         <script src="./js/index.js" type="module"></script>
         
+        <p xmlns:dct="http://purl.org/dc/terms/" xmlns:cc="http://creativecommons.org/ns#" class="license-text">
+            <span rel="dct:title">
+                Virtual-Tryon
+            </span> 
+            by 
+            <a rel="cc:attributionURL dct:creator" property="cc:attributionName" href="https://github.com/dewball345">
+                Abhiraam Eranti
+            </a> 
+            is licensed under 
+            <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0">
+                CC BY-NC-ND 4.0
+                <img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1" />
+                <img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1" />
+                <img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/nc.svg?ref=chooser-v1" />
+                <img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/nd.svg?ref=chooser-v1" />
+            </a>
+        </p>
         
     </body>
+<!--
+    <footer>
+
+    </footer>
+-->
 </html>

@@ -1,10 +1,19 @@
 import {OBJLoader2} from 'https://threejsfundamentals.org/threejs/resources/threejs/r119/examples/jsm/loaders/OBJLoader2.js';
 
+
+
 export class EarringLeft{
     constructor(mesh){
-        this.mesh = mesh
+        this.mesh = mesh;
+        this.path = "";
     }
-    async update({poses, mask, xOff, yOff, zOff, width, height, camera}){
+    async update({poses, mask, xOff, yOff, zOff, width, height, scaleOff, camera, earringPath}){
+        if(earringPath !== this.path){
+            this.path = earringPath;
+            this.mesh.children[0].geometry = (await EarringLeft.create(earringPath)).children[0].geometry
+//            console.log("Howdy");
+        }
+        
         const domToWorld = function(x, y) {
           let newPosition = new THREE.Vector3();
           let normalizedX = (x / width) * 2 - 1;
@@ -31,12 +40,16 @@ export class EarringLeft{
         this.mesh.rotation.z = -this.mesh.rotation.y;
         this.mesh.rotation.y = temp;
         this.mesh.position.z = trackLeftPos.position.z + zOff;
+        this.mesh.scale.x = 10 + scaleOff;
+        this.mesh.scale.y = 10 + scaleOff;
+        this.mesh.scale.z = 10 + scaleOff;
     }
-    static create(objPath='./obj/untitled.obj') {
+    static create(objPath) {
+        this.path = objPath;
         return new Promise((resolve, reject) => {
             const objLoader = new OBJLoader2();
             var loader = objLoader.load(objPath, (root) => {
-                console.log("FUNCTION: " + objLoader.load);
+                //console.log("FUNCTION: " + objLoader.load);
                 var material = new THREE.MeshStandardMaterial({
                       color: 0xff2010,
                       roughness: 0.4,
