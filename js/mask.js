@@ -28,6 +28,7 @@ export class Mask{
 
         faceGeometry.setSize(width, height);
         faceGeometry.update(points, true);
+        
         var material = new THREE.MeshStandardMaterial({
           color: 0xffffee,
           roughness: 0.8,

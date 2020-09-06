@@ -51,7 +51,7 @@ export class EarringLeft{
             var loader = objLoader.load(objPath, (root) => {
                 //console.log("FUNCTION: " + objLoader.load);
                 var material = new THREE.MeshStandardMaterial({
-                      color: 0xff2010,
+                      color: 0xD4AF37,
                       roughness: 0.4,
                       metalness: 0.1,
                       transparent: true,

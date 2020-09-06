@@ -1,4 +1,3 @@
-
 import {TRIANGULATION} from '../third-party/triangulation.js';
 import { FaceMeshFaceGeometry } from '../third-party/face.js';
 import {OBJLoader2} from 'https://threejsfundamentals.org/threejs/resources/threejs/r119/examples/jsm/loaders/OBJLoader2.js';
@@ -8,6 +7,8 @@ import {Necklace} from "./necklace.js";
 import {NoseRing} from "./nosering.js";
 import {Bottu} from "./bottu.js";
 import {Mask} from "./mask.js";
+import {Goggles} from "./goggles.js";
+import {BangleRight} from "./bangleRight.js";
 //import * as dat from './dat.gui.js';
 
 
@@ -21,6 +22,7 @@ var controls = {
             needNoseRing: false,
             needBangle: false,
             needRing: false,
+            needGoggles: false,
             zOff: -100,
             yOff: 60,
             xOff: -10,
@@ -36,12 +38,17 @@ var controls = {
             xOff5:0,
             yOff5:0,
             zOff5:0,
+            xOff6:0,
+            yOff6:0,
+            zOff6:0,
             scaleOff:0,
             scaleOff2:0,
             scaleOff3:0,
+            scaleOff4:0,
             rotX:0,
+            goggleRotZ:0,
             earringType:'Option 1',
-            necklaceType:'Option 1'
+            necklaceType:'Option 1', 
 }
 
 var earringFolder = gui.addFolder("Earrings");
@@ -77,6 +84,14 @@ noseRingFolder.add(controls, 'zOff5').name("Z offset(Nose Ring)").min(-1000).max
 noseRingFolder.add(controls, 'xOff5').name("X offset(Nose Ring)").min(-200).max(200).step(10);
 noseRingFolder.add(controls, 'yOff5').name("Y offset(Nose Ring)").min(-200).max(200).step(10);
 
+var goggleFolder = gui.addFolder("Goggles");
+goggleFolder.add(controls, 'needGoggles').name("Include Goggles").listen();
+goggleFolder.add(controls, 'zOff6').name("Z offset(Goggles)").min(-1000).max(1000).step(10);
+goggleFolder.add(controls, 'xOff6').name("X offset(Goggles)").min(-200).max(200).step(10);
+goggleFolder.add(controls, 'yOff6').name("Y offset(Goggles)").min(-200).max(400).step(10);
+goggleFolder.add(controls, 'scaleOff4').name("Scale(Goggles)").min(-10).max(20).step(1);
+//necklaceFolder.add(controls, 'scaleOff3').name("Scale(Necklace)").min(-10).max(20).step(1);
+
 gui.add(controls, 'needBangle').name("Include Bangle").listen();
 gui.add(controls, 'needRing').name("Include Ring").listen();
 
@@ -106,7 +121,7 @@ renderer.outputEncoding = THREE.sRGBEncoding;
     
 
 var zOffset = 0;
-
+var loader = document.getElementById("loader");
 
 let width = 0;
 let height = 0;
@@ -148,13 +163,21 @@ window.addEventListener("resize", () => {
 })
 
 video.addEventListener("playing", async () => {
-    model = await facemesh.load();
+    model = await facemesh.load(1);
     pose = await posenet.load({
-      architecture: 'ResNet50',
-      outputStride: 32,
-      inputResolution: { width: canvas.width, height:canvas.height },
-      quantBytes:2
+      architecture: 'MobileNetV1',
+      outputStride: 16,
+      inputResolution: { width: 640, height: 480 },
+      multiplier: 0.75,
     });
+//    pose = await posenet.load({
+//      architecture: 'ResNet50',
+//      outputStride: 32,
+//      inputResolution: { width: 640, height: 480 },
+//      quantBytes: 1,
+//    });
+    
+    
     canStart = true;
     console.log("CAN START LOL")
 //    startThreeJS();
@@ -182,6 +205,7 @@ async function returnPoseLandmarks(){
     poses = await pose.estimateSinglePose(video, {
       flipHorizontal: false
     });
+    console.log(poses);
     return poses;
 }
 
@@ -222,20 +246,16 @@ function setLighting(){
 
 async function startThreeJS(){
     shouldStop = false;
+    loader.className = "loading-state"
     setLighting();
     
-    if(controls.earringType === "Option 1"){
-        var leftEarring = new EarringLeft(await EarringLeft.create('./obj/untitled.obj'));
-        scene.add(leftEarring.mesh);
-        var rightEarring = new EarringRight(await EarringRight.create('./obj/untitled.obj'));
-        scene.add(rightEarring.mesh);  
-    } else {
-        var leftEarring = new EarringLeft(await EarringLeft.create('./obj/secondearring.obj'));
-        scene.add(leftEarring.mesh);
-        var rightEarring = new EarringRight(await EarringRight.create('./obj/secondearring.obj'));
-        scene.add(rightEarring.mesh);  
-    }
-    
+    var leftEarring = new EarringLeft(await EarringLeft.create(
+        controls.earringType == "Option 1" ? './obj/untitled.obj' : './obj/secondearring.obj'));
+    scene.add(leftEarring.mesh);
+    var rightEarring = new EarringRight(await EarringRight.create(
+        controls.earringType == "Option 1" ? './obj/untitled.obj' : './obj/secondearring.obj'));
+    scene.add(rightEarring.mesh);      
+
     if(controls.necklaceType == "Option 1"){
         var necklace = new Necklace(await Necklace.create("./obj/necklace.obj"));
         scene.add(necklace.mesh);       
@@ -248,6 +268,10 @@ async function startThreeJS(){
     scene.add(noseRing.mesh);
     var bottu = new Bottu(Bottu.create());
     scene.add(bottu.mesh)
+    var goggles = new Goggles(await Goggles.create("./obj/goggles.obj"));
+    scene.add(goggles.mesh);
+    var bangleRight = new BangleRight(BangleRight.create());
+    scene.add(bangleRight.mesh);
     var mask = new Mask(Mask.create({
         points: await returnLandmarks(), 
         camera: camera, 
@@ -257,6 +281,7 @@ async function startThreeJS(){
     }));
     scene.add(mask.mesh)
     camera.position.z = 5;
+    loader.className = "dormant-state";
     var startThreeJSAnimation = async function (){
         var faceLandmarks = await returnLandmarks();
         var poseLandmarks = await returnPoseLandmarks();
@@ -277,57 +302,30 @@ async function startThreeJS(){
         } else {
             leftEarring.show();
             rightEarring.show();
-            if(controls.earringType === "Option 1"){
-                await leftEarring.update({
-                    poses: poseLandmarks, 
-                    camera: camera, 
-                    height: canvas.height,
-                    width: canvas.width,
-                    mask: mask.mesh,
-                    xOff: controls.xOff,
-                    yOff: controls.yOff,
-                    zOff: controls.zOff,
-                    scaleOff:controls.scaleOff,
-                    earringPath: './obj/untitled.obj'
-                });
-                await rightEarring.update({
-                    poses: poseLandmarks, 
-                    camera: camera, 
-                    height: canvas.height,
-                    width: canvas.width,
-                    mask: mask.mesh,
-                    xOff: controls.xOff2, 
-                    yOff: controls.yOff2,
-                    zOff: controls.zOff2,
-                    scaleOff: controls.scaleOff2,
-                    earringPath: './obj/untitled.obj'
-                }) 
-            } else {
-                await leftEarring.update({
-                    poses: poseLandmarks, 
-                    camera: camera, 
-                    height: canvas.height,
-                    width: canvas.width,
-                    mask: mask.mesh,
-                    xOff: controls.xOff,
-                    yOff: controls.yOff,
-                    zOff: controls.zOff,
-                    scaleOff:controls.scaleOff,
-                    earringPath: './obj/secondearring.obj'
-                });
-                await rightEarring.update({
-                    poses: poseLandmarks, 
-                    camera: camera, 
-                    height: canvas.height,
-                    width: canvas.width,
-                    mask: mask.mesh,
-                    xOff: controls.xOff2,
-                    yOff: controls.yOff2,
-                    zOff: controls.zOff2,
-                    scaleOff: controls.scaleOff2,
-                    earringPath: './obj/secondearring.obj'
-                })                
-            }
+            await leftEarring.update({
+                poses: poseLandmarks, 
+                camera: camera, 
+                height: canvas.height,
+                width: canvas.width,
+                mask: mask.mesh,
+                xOff: controls.xOff,
+                yOff: controls.yOff,
+                zOff: controls.zOff,
+                scaleOff:controls.scaleOff,
+                earringPath: controls.earringType == "Option 1" ? './obj/untitled.obj' : './obj/secondearring.obj'
+            });
+            await rightEarring.update({
+                poses: poseLandmarks, 
+                camera: camera, 
+                height: canvas.height,
+                width: canvas.width,
+                mask: mask.mesh,
+                xOff: controls.xOff2, 
+                yOff: controls.yOff2,
+                zOff: controls.zOff2,
+                scaleOff: controls.scaleOff2,
+                earringPath: controls.earringType == "Option 1" ? './obj/untitled.obj' : './obj/secondearring.obj'
+            }) 
 
         }
         if(controls.needNoseRing == false){
@@ -356,37 +354,45 @@ async function startThreeJS(){
             necklace.hide();
         } else {
             necklace.show();
-            if(controls.necklaceType == "Option 1"){
-                await necklace.update({
-                    poses: poseLandmarks,
-                    camera: camera,
-                    height: canvas.height,
-                    width: canvas.width,
-                    mask: mask.mesh,
-                    xOff: controls.xOff3,
-                    yOff: controls.yOff3,
-                    zOff: controls.zOff3,
-                    scaleOff: controls.scaleOff3,
-                    rotX: controls.rotX,
-                    necklacePath: "./obj/necklace2.obj"
-                });
-            } else {
-                await necklace.update({
-                    poses: poseLandmarks,
-                    camera: camera,
-                    height: canvas.height,
-                    width: canvas.width,
-                    mask: mask.mesh,
-                    xOff: controls.xOff3,
-                    yOff: controls.yOff3,
-                    zOff: controls.zOff3,
-                    scaleOff: controls.scaleOff3,
-                    rotX: controls.rotX,
-                    necklacePath: "./obj/necklace.obj"
-                });                
-            }
+            await necklace.update({
+                poses: poseLandmarks,
+                camera: camera,
+                height: canvas.height,
+                width: canvas.width,
+                mask: mask.mesh,
+                xOff: controls.xOff3,
+                yOff: controls.yOff3,
+                zOff: controls.zOff3,
+                scaleOff: controls.scaleOff3,
+                rotX: controls.rotX,
+                necklacePath: controls.necklaceType == "Option 1" ? './obj/necklace2.obj' : './obj/necklace.obj'
+            });
 
         }
+        
+        if(controls.needGoggles == false){
+            goggles.hide();
+        } else {
+            goggles.show();
+            await goggles.update({
+                mask: mask.mesh,
+                zOff: controls.zOff6,
+                xOff: controls.xOff6,
+                yOff:controls.yOff6,
+                scaleOff: controls.scaleOff4
+            })
+        }
+        
+        await bangleRight.update({
+            poses: poseLandmarks,
+            camera: camera,
+            height: canvas.height,
+            width: canvas.width,
+            scaleOff: 0,
+            xOff: 0,
+            yOff: 0,
+            zOff: 0,
+        })
         renderer.render( scene, camera );
     }
     startThreeJSAnimation();

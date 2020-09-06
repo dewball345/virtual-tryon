@@ -2,8 +2,9 @@ import {OBJLoader2} from 'https://threejsfundamentals.org/threejs/resources/thre
 
 export class Necklace{
     constructor(mesh){
-        this.mesh = mesh
+        this.mesh = mesh;
         this.path = "";
+        this.prevDom = {x: 0, y:0}
     }
     async update({poses, mask, xOff, yOff, zOff, scaleOff, width, height, camera, rotX, necklacePath}){
         if(necklacePath !== this.path){
@@ -23,8 +24,16 @@ export class Necklace{
         var averagedX = (poses.keypoints[5].position.x + poses.keypoints[6].position.x)/2;
         var averagedY = (poses.keypoints[5].position.y + poses.keypoints[6].position.y)/2;
         var domPos = domToWorld(averagedX, averagedY);
+        
+        console.log(domPos.y + " " + this.mesh.position.y);
+//        if(Math.abs(domPos.x - this.prevDom.x) < 20 && Math.abs(domPos.y - this.prevDom.y) < 20){
+//            console.log("That's The Case!");
+//            return;
+//        } else {
         this.mesh.position.x = domPos.x;
-        this.mesh.position.y = domPos.y;
+        this.mesh.position.y = domPos.y;  
+//        }
+
         this.mesh.position.z = 0;
         this.mesh.rotation.x = rotX;
         
@@ -44,7 +53,10 @@ export class Necklace{
         this.mesh.scale.x = 10 + scaleOff;
         this.mesh.scale.y = 10 + scaleOff;
         this.mesh.scale.z = 10 + scaleOff;
-        console.log(this.mesh.position);
+        
+        this.prevDom.x = domPos.x;
+        this.prevDom.y = domPos.y;
+        //console.log(this.mesh.position);
     }
     static create(objPath='./obj/untitled.obj') {
         return new Promise((resolve, reject) => {
@@ -52,9 +64,9 @@ export class Necklace{
             var loader = objLoader.load(objPath, (root) => {
                 //console.log("FUNCTION: " + objLoader.load);
                 var material = new THREE.MeshStandardMaterial({
-                      color: 0xff2010,
-                      roughness: 0.4,
-                      metalness: 0.1,
+                      color: 0xD4AF37,
+                      roughness: 0.2,
+                      metalness: 0.7,
                       transparent: true,
                 });
                 //console.log(root);

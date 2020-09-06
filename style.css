@@ -12,7 +12,9 @@ body{
 /*    margin-top: 5%;*/
     background-color: #EDC7B7;
 }
-
+.title{
+    background-color: #AC3B61; 
+}
 button {
     position:relative;
     z-index:9999;
@@ -56,28 +58,34 @@ canvas{
 }
 #loading{
     position:absolute;
-    top:0;
-    left:0;
+    top:20%;
+    left:20%;
+ 
 }
 @keyframes spin { 
     100% { 
         transform: rotate(360deg); 
     } 
-} 
-#center{   
-    border: 12px solid #f3f3f3; 
+}
+
+#loader{
+    position: absolute;
+    top: 42%;
+    left: 42%;
+}
+.loading-state{   
+    border: 12px solid #AC3B61; 
     border-radius: 50%; 
-    border-top: 12px solid #444444; 
+    border-top: 12px solid #CE5D83; 
     width: 70px; 
     height: 70px; 
     animation: spin 1s linear infinite;
-    position: absolute; 
-    top: 0; 
-    bottom: 0; 
-    left: 0; 
-    right: 0; 
-    margin: auto; 
+     
 }
+
+.dormant-state{
+}
+
 footer{
     background-color: #EED8C8;
     padding: 5px;
