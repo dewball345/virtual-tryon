@@ -103,7 +103,7 @@ export class Necklace{
         
         this.prevDom.x = domPos.x;
         this.prevDom.y = domPos.y;
-        rotate(this.mesh);
+        //rotate(this.mesh);
         //console.log(this.mesh.position);
     }
     static create(objPath='./obj/untitled.obj') {
