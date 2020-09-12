@@ -1,3 +1,5 @@
+"use strict";
+
 import {TRIANGULATION} from '../third-party/triangulation.js';
 import { FaceMeshFaceGeometry } from '../third-party/face.js';
 import {OBJLoader2} from 'https://threejsfundamentals.org/threejs/resources/threejs/r119/examples/jsm/loaders/OBJLoader2.js';
@@ -9,6 +11,7 @@ import {Bottu} from "./bottu.js";
 import {Mask} from "./mask.js";
 import {Goggles} from "./goggles.js";
 import {BangleRight} from "./bangleRight.js";
+import {Shirt} from "./shirt.js";
 //import * as dat from './dat.gui.js';
 
 
@@ -23,6 +26,7 @@ var controls = {
             needBangle: false,
             needRing: false,
             needGoggles: false,
+            needShirt: false,
             zOff: -100,
             yOff: 60,
             xOff: -10,
@@ -41,10 +45,14 @@ var controls = {
             xOff6:0,
             yOff6:0,
             zOff6:0,
+            xOff7:0,
+            yOff7:0,
+            zOff7:0,
             scaleOff:0,
             scaleOff2:0,
             scaleOff3:0,
             scaleOff4:0,
+            scaleOff5:0,
             rotX:0,
             goggleRotZ:0,
             earringType:'Option 1',
@@ -92,6 +100,13 @@ goggleFolder.add(controls, 'yOff6').name("Y offset(Goggles)").min(-200).max(400)
 goggleFolder.add(controls, 'scaleOff4').name("Scale(Goggles)").min(-10).max(20).step(1);
 //necklaceFolder.add(controls, 'scaleOff3').name("Scale(Necklace)").min(-10).max(20).step(1);
 
+var shirtFolder = gui.addFolder("Shirts");
+shirtFolder.add(controls, 'needShirt').name("Include Shirt").listen();
+shirtFolder.add(controls, 'zOff7').name("Z offset(Shirt)").min(-1000).max(1000).step(10);
+shirtFolder.add(controls, 'xOff7').name("X offset(Shirt)").min(-500).max(500).step(10);
+shirtFolder.add(controls, 'yOff7').name("Y offset(Shirt)").min(-500).max(400).step(10);
+shirtFolder.add(controls, 'scaleOff5').name("Scale(Shirt)").min(-10).max(40).step(1);
+
 gui.add(controls, 'needBangle').name("Include Bangle").listen();
 gui.add(controls, 'needRing').name("Include Ring").listen();
 
@@ -125,23 +140,63 @@ var loader = document.getElementById("loader");
 
 let width = 0;
 let height = 0;
+var playedOnce = false;
+var shouldRestart = true;
 
 container.appendChild(renderer.domElement)
 renderer.setSize( canvas.width, canvas.height );
 
 async function startVideo(){
+//    console.log(canvas.width);
+//    console.log(video.width);
+    //loader.className = "loading-state";
     var constraints = { audio: false, video: { width: canvas.width, height: canvas.height} }; 
     try{
         var stream = await navigator.mediaDevices.getUserMedia(constraints);
+        //console.log(stream);
         video.srcObject = stream;
     } catch(err){
         console.log(err.name + ": " + err.message);
     }
+//    loader.className = "dormant-state";
     
 }
 
+function setWidths(){
+//    const w = window.innerWidth -55;
+//    const h = window.innerHeight-100;
+    const w =Math.min(window.innerWidth, window.innerHeight)/1.5;
+    const h = Math.min(window.innerWidth, window.innerHeight)/1.5;
+    container.width = w;
+    container.height = h;
+    container.style.width = w + "px";
+    container.style.height = h + "px";
+    canvas.width = w;
+    canvas.height = h;
+    canvas.style.width = w + "px";
+    canvas.style.height = h + "px";
+    video.width = w;
+    video.height = h;
+    video.style.width = w + "px";
+    video.style.height = h + "px";
+//    video.videoWidth = w;
+//    video.videoHeight = h;
+}
+
+//async function changeWebcamAspect(){
+//    if(shouldRestart){
+//        shouldRestart = false;
+//        setTimeout(async () => {
+//            await startVideo();
+//            shouldRestart = true;
+//        }, 2000);
+//    }
+//}
+
 console.log("HELLO LOL");
 console.log(video)
+setWidths();
+resize();
 startVideo();
 
 var canStart = false;
@@ -149,6 +204,7 @@ var canStart = false;
 
 
 function resize(){
+    //console.log(canvas.width);
     camera.left = -.5 * canvas.width;
     camera.right = .5 * canvas.width;
     camera.top = -.5 * canvas.height;
@@ -158,28 +214,31 @@ function resize(){
 }
 
 
-window.addEventListener("resize", () => {
+window.addEventListener("resize", async () => {
     resize();
 })
 
 video.addEventListener("playing", async () => {
-    model = await facemesh.load(1);
-    pose = await posenet.load({
-      architecture: 'MobileNetV1',
-      outputStride: 16,
-      inputResolution: { width: 640, height: 480 },
-      multiplier: 0.75,
-    });
-//    pose = await posenet.load({
-//      architecture: 'ResNet50',
-//      outputStride: 32,
-//      inputResolution: { width: 640, height: 480 },
-//      quantBytes: 1,
-//    });
-    
-    
-    canStart = true;
-    console.log("CAN START LOL")
+    if(!playedOnce){
+        model = await facemesh.load(1);
+        pose = await posenet.load({
+          architecture: 'MobileNetV1',
+          outputStride: 16,
+          inputResolution: { width: 640, height: 480 },
+          multiplier: 0.75,
+        });
+    //    pose = await posenet.load({
+    //      architecture: 'ResNet50',
+    //      outputStride: 32,
+    //      inputResolution: { width: 640, height: 480 },
+    //      quantBytes: 1,
+    //    });
+
+
+        canStart = true;
+        console.log("CAN START LOL");
+        playedOnce = true;
+    }
 //    startThreeJS();
 })
 
@@ -205,7 +264,7 @@ async function returnPoseLandmarks(){
     poses = await pose.estimateSinglePose(video, {
       flipHorizontal: false
     });
-    console.log(poses);
+//    console.log(poses);
     return poses;
 }
 
@@ -270,8 +329,10 @@ async function startThreeJS(){
     scene.add(bottu.mesh)
     var goggles = new Goggles(await Goggles.create("./obj/goggles.obj"));
     scene.add(goggles.mesh);
-    var bangleRight = new BangleRight(BangleRight.create());
-    scene.add(bangleRight.mesh);
+    var shirt = new Shirt(await Shirt.create("./obj/shirt.obj"));
+    scene.add(shirt.mesh);
+//    var bangleRight = new BangleRight(BangleRight.create());
+//    scene.add(bangleRight.mesh);
     var mask = new Mask(Mask.create({
         points: await returnLandmarks(), 
         camera: camera, 
@@ -380,19 +441,34 @@ async function startThreeJS(){
                 xOff: controls.xOff6,
                 yOff:controls.yOff6,
                 scaleOff: controls.scaleOff4
-            })
+            });
         }
-        
-        await bangleRight.update({
-            poses: poseLandmarks,
-            camera: camera,
-            height: canvas.height,
-            width: canvas.width,
-            scaleOff: 0,
-            xOff: 0,
-            yOff: 0,
-            zOff: 0,
-        })
+        if(controls.needShirt == false){
+            shirt.hide();
+        } else {
+            shirt.show();
+            await shirt.update({
+                poses: poseLandmarks, 
+                xOff: controls.xOff7, 
+                yOff: controls.yOff7, 
+                zOff: controls.zOff7, 
+                width: canvas.width, 
+                height: canvas.height, 
+                scaleOff: controls.scaleOff5, 
+                camera: camera, 
+                shirtPath: "./obj/shirt.obj"
+            });
+        }
+//        await bangleRight.update({
+//            poses: poseLandmarks,
+//            camera: camera,
+//            height: canvas.height,
+//            width: canvas.width,
+//            scaleOff: 0,
+//            xOff: 0,
+//            yOff: 0,
+//            zOff: 0,
+//        })
         renderer.render( scene, camera );
     }
     startThreeJSAnimation();

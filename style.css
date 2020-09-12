@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Questrial&display=swap');
+
 *{
     font-family: 'Questrial', sans-serif;
 }
@@ -31,16 +32,16 @@ h6{
 }
 
 #container {
-    width:700px;
-    height:450px;
+/*    width:700px;*/
+/*    height:450px;*/
     margin: 0px auto;
     border: 10px #AC3B61 solid;
     position:relative;
     border-radius:20px;    
 }
 #video{
-    width: 700px;
-    height: 450px;
+/*    width: 700px;*/
+/*    height: 450px;*/
     background-color: #666;
     position:absolute;
     top:0;
@@ -48,8 +49,8 @@ h6{
     border-radius:10px; 
 }
 canvas{
-    width:700px;
-    height:450px;
+/*    width:700px;*/
+/*    height:450px;*/
     position:absolute;
     top:0;
     left:0;

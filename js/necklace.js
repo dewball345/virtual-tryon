@@ -1,4 +1,5 @@
 import {OBJLoader2} from 'https://threejsfundamentals.org/threejs/resources/threejs/r119/examples/jsm/loaders/OBJLoader2.js';
+import {DistanceHelper} from "./distanceHelper.js";
 
 export class Necklace{
     constructor(mesh){
@@ -21,30 +22,76 @@ export class Necklace{
           return newPosition;
         };
         
+        const rotate = function(mesh){
+            var domShoulderLeft = domToWorld(
+                poses.keypoints[5].position.x, 
+                poses.keypoints[5].position.y
+            );
+            var domShoulderRight = domToWorld(
+                poses.keypoints[6].position.x,
+                poses.keypoints[6].position.y
+            );
+            var domArmLeft = domToWorld(
+                poses.keypoints[11].position.x, 
+                poses.keypoints[11].position.y
+            );
+            var domArmRight = domToWorld(
+                poses.keypoints[12].position.x,
+                poses.keypoints[12].position.y
+            );
+            
+            var shoulderPtLeftX = domShoulderLeft.x;
+            var shoulderPtLeftY = domShoulderLeft.y
+            
+            var shoulderPtRightX = domShoulderRight.x;
+            var shoulderPtRightY = domShoulderRight.y;
+            
+            var armPtLeftX = domArmLeft.x;
+            var armPtLeftY = domArmLeft.y
+            
+            var armPtRightX = domArmRight.x;
+            var armPtRightY = domArmRight.y;
+            
+            var distanceLeftArm = DistanceHelper.distance({
+                x1: armPtLeftX,
+                y1: armPtLeftY,
+                x2: shoulderPtLeftX,
+                y2: shoulderPtLeftY
+            });
+            
+            var distanceRightArm = DistanceHelper.distance({
+                x1: armPtRightX,
+                y1: armPtRightY,
+                x2: shoulderPtRightX,
+                y2: shoulderPtRightY
+            });
+            
+            var distanceShoulder = DistanceHelper.distance({
+                x1: shoulderPtLeftX,
+                y1: shoulderPtLeftY,
+                x2: shoulderPtRightX,
+                y2: shoulderPtRightY                
+            })
+            
+            var yRot = Math.atan(
+                (distanceRightArm, distanceLeftArm - distanceRightArm,distanceLeftArm)/
+                distanceShoulder);
+            
+            mesh.rotation.y = yRot;
+        }
+        
         var averagedX = (poses.keypoints[5].position.x + poses.keypoints[6].position.x)/2;
         var averagedY = (poses.keypoints[5].position.y + poses.keypoints[6].position.y)/2;
         var domPos = domToWorld(averagedX, averagedY);
         
         console.log(domPos.y + " " + this.mesh.position.y);
-//        if(Math.abs(domPos.x - this.prevDom.x) < 20 && Math.abs(domPos.y - this.prevDom.y) < 20){
-//            console.log("That's The Case!");
-//            return;
-//        } else {
+
         this.mesh.position.x = domPos.x;
         this.mesh.position.y = domPos.y;  
-//        }
+
 
         this.mesh.position.z = 0;
         this.mesh.rotation.x = rotX;
-        
-        //const trackNecklace = mask.geometry.track(118 , 50 , 101);
-        //this.mesh.position.copy(trackNecklace.position);
-        
-        //this.mesh.rotation.setFromRotationMatrix(trackNecklace.rotation);
-
-        //this.mesh.rotation.x *= -1;
-        //this.mesh.rotation.y *= -1;
-        //this.mesh.rotation.z *= -1;
 
         this.mesh.position.x += xOff;
         this.mesh.position.y += yOff;
@@ -56,6 +103,7 @@ export class Necklace{
         
         this.prevDom.x = domPos.x;
         this.prevDom.y = domPos.y;
+        rotate(this.mesh);
         //console.log(this.mesh.position);
     }
     static create(objPath='./obj/untitled.obj') {
