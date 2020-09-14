@@ -6,6 +6,7 @@ export class Shirt{
     constructor(mesh){
         this.mesh = mesh;
         this.path = "";
+        this.prevDom = {x: 0, y:0};
     }
     async update({poses, xOff, yOff, zOff, width, height, scaleOff, camera, shirtPath}){
         if(shirtPath !== this.path){
@@ -79,6 +80,8 @@ export class Shirt{
                 distanceShoulder));
             
             mesh.rotation.y = yRot;
+            this.prevDom.x = domPos.x;
+            this.prevDom.y = domPos.y;
         }
         
         if(poses.keypoints[4].score <= 0.3){
@@ -89,13 +92,15 @@ export class Shirt{
         var averagedX = (poses.keypoints[5].position.x + poses.keypoints[6].position.x)/2;
         var averagedY = (poses.keypoints[5].position.y + poses.keypoints[6].position.y)/2;
         var domPos = domToWorld(averagedX, averagedY);
-        this.mesh.position.x = domPos.x + xOff;
-        this.mesh.position.y = domPos.y + yOff;
+        this.mesh.position.x = (domPos.x + this.prevDom.x)/2 + xOff;
+        this.mesh.position.y = (domPos.y + this.prevDom.y)/2 + yOff;
         this.mesh.position.z = zOff;
         this.mesh.scale.x = 10 + scaleOff;
         this.mesh.scale.y = 10 + scaleOff;
         this.mesh.scale.z = 10 + scaleOff;
         //rotate(this.mesh);
+        this.prevDom.x = domPos.x;
+        this.prevDom.y = domPos.y;
     }
     static create(objPath) {
         this.path = objPath;

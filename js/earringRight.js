@@ -4,6 +4,7 @@ export class EarringRight{
     constructor(mesh){
         this.mesh = mesh;
         this.path = "";
+        this.prevDom = {x: 0, y:0};
     }
     static create(objPath) {
         return new Promise((resolve, reject) => {
@@ -55,8 +56,8 @@ export class EarringRight{
             poses.keypoints[3].position.y
         );
         
-        this.mesh.position.x = domPos.x + xOff;
-        this.mesh.position.y = domPos.y + yOff;
+        this.mesh.position.x = (domPos.x + this.prevDom.x)/2 + xOff;
+        this.mesh.position.y = (domPos.y + this.prevDom.y)/2 + yOff;
         
         const trackLeftRot = mask.geometry.track(109 , 108 , 151 );
         const trackLeftPos = mask.geometry.track(177 , 137 , 132 );
@@ -71,6 +72,8 @@ export class EarringRight{
         this.mesh.scale.x = 10 + scaleOff;
         this.mesh.scale.y = 10 + scaleOff;
         this.mesh.scale.z = 10 + scaleOff;
+        this.prevDom.x = domPos.x;
+        this.prevDom.y = domPos.y;
     }
     hide(){
         //console.log(this.mesh);

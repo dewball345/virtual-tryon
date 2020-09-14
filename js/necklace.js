@@ -5,7 +5,7 @@ export class Necklace{
     constructor(mesh){
         this.mesh = mesh;
         this.path = "";
-        this.prevDom = {x: 0, y:0}
+        this.prevDom = {x: 0, y:0};
     }
     async update({poses, mask, xOff, yOff, zOff, scaleOff, width, height, camera, rotX, necklacePath}){
         if(necklacePath !== this.path){
@@ -84,10 +84,10 @@ export class Necklace{
         var averagedY = (poses.keypoints[5].position.y + poses.keypoints[6].position.y)/2;
         var domPos = domToWorld(averagedX, averagedY);
         
-        console.log(domPos.y + " " + this.mesh.position.y);
+        //console.log(domPos.y + " " + this.mesh.position.y);
 
-        this.mesh.position.x = domPos.x;
-        this.mesh.position.y = domPos.y;  
+        this.mesh.position.x = (domPos.x + this.prevDom.x)/2;
+        this.mesh.position.y = (domPos.y + this.prevDom.y)/2;  
 
 
         this.mesh.position.z = 0;
@@ -103,6 +103,8 @@ export class Necklace{
         
         this.prevDom.x = domPos.x;
         this.prevDom.y = domPos.y;
+        
+//        console.log(this.prevDom)
         //rotate(this.mesh);
         //console.log(this.mesh.position);
     }
