@@ -11,7 +11,7 @@ export class Necklace{
         if(necklacePath !== this.path){
             this.path = necklacePath;
             this.mesh.children[0].geometry = (await Necklace.create(necklacePath)).children[0].geometry
-//            console.log("Howdy");
+//            console.log("Howdyj");
         }
         const domToWorld = function(x, y) {
           let newPosition = new THREE.Vector3();
