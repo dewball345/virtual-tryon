@@ -22,7 +22,10 @@ export class EarringLeft{
           newPosition.set(normalizedX, -normalizedY, 0);
           newPosition.unproject(camera);
           return newPosition;
-        };  
+        };
+//        console.log("POSES EARRING")
+//        console.log(poses)
+        
         if(poses.keypoints[4].score <= 0.3){
             this.hide();
             return;
@@ -31,6 +34,7 @@ export class EarringLeft{
             poses.keypoints[4].position.x, 
             poses.keypoints[4].position.y
         );
+        console.log(domPos);
         this.mesh.position.x = (domPos.x + this.prevDom.x)/2 + xOff;
         this.mesh.position.y = (domPos.y + this.prevDom.y)/2 + yOff;
         const trackLeftRot = mask.geometry.track(109 , 108 , 151 );

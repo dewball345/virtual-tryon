@@ -3,6 +3,7 @@
 import {TRIANGULATION} from '../third-party/triangulation.js';
 import { FaceMeshFaceGeometry } from '../third-party/face.js';
 import {OBJLoader2} from 'https://threejsfundamentals.org/threejs/resources/threejs/r119/examples/jsm/loaders/OBJLoader2.js';
+import {OrbitControls} from "../third-party/OrbitControls.js";
 import {EarringLeft} from "./earringLeft.js";
 import {EarringRight} from "./earringRight.js";
 import {Necklace} from "./necklace.js";
@@ -13,6 +14,8 @@ import {Goggles} from "./goggles.js";
 import {BangleRight} from "./bangleRight.js";
 import {Shirt} from "./shirt.js";
 import {ModelHelper} from "./modelHelper.js";
+import {NeckOccluder} from "./neckOccluder.js";
+
 var gui = new dat.GUI();
 var controls = {
             needEarrings: false,
@@ -23,6 +26,7 @@ var controls = {
             needRing: false,
             needGoggles: false,
             needShirt: false,
+            needNeckoccluder: false,
             zOff: -100,
             yOff: 60,
             xOff: -10,
@@ -44,19 +48,23 @@ var controls = {
             xOff7:0,
             yOff7:0,
             zOff7:0,
+            zOff8:0,
+            yOff8:0,
+            xOff8:0,
             scaleOff:0,
             scaleOff2:0,
             scaleOff3:0,
             scaleOff4:0,
             scaleOff5:0,
+            scaleOff6:0,
             rotX:0,
             goggleRotZ:0,
             earringType:'Option 1',
             necklaceType:'Option 1', 
 }
-var earringFolder = gui.addFolder("Earrings");
+var earringFolder = gui.addFolder("Earrings(Pre-Release/Release)");
 earringFolder.add(controls, 'needEarrings').name("Include Earrings").listen();
-earringFolder.add(controls, 'zOff').name("Z offset(Earring: left)").min(-1000).max(1000).step(100);
+earringFolder.add(controls, 'zOff').name("Z offset(Earring: left)").min(-1000).max(1000).step(10);
 earringFolder.add(controls, 'xOff').name("X offset(Earring: left)").min(-200).max(200).step(10);
 earringFolder.add(controls, 'yOff').name("Y offset(Earring: left)").min(-200).max(200).step(10);
 earringFolder.add(controls, 'scaleOff').name("Scale(Earring: Left)").min(-5).max(10).step(1);
@@ -65,38 +73,45 @@ earringFolder.add(controls, 'zOff2').name("Z offset(Earring: right)").min(-1000)
 earringFolder.add(controls, 'xOff2').name("X offset(Earring: right)").min(-200).max(200).step(10);
 earringFolder.add(controls, 'yOff2').name("Y offset(Earring: right)").min(-200).max(200).step(10);
 earringFolder.add(controls, 'earringType', [ 'Option 1', 'Option 2'] );
-var necklaceFolder = gui.addFolder("Necklace");
+var necklaceFolder = gui.addFolder("Necklace(Pre-Release/Release)");
 necklaceFolder.add(controls, 'needNecklace').name("Include Necklace").listen();
-necklaceFolder.add(controls, 'zOff3').name("Z offset(Necklace)").min(-1000).max(1000).step(100);
+necklaceFolder.add(controls, 'zOff3').name("Z offset(Necklace)").min(-1000).max(1000).step(10);
 necklaceFolder.add(controls, 'xOff3').name("X offset(Necklace)").min(-200).max(200).step(10);
 necklaceFolder.add(controls, 'yOff3').name("Y offset(Necklace)").min(-200).max(400).step(10);
 necklaceFolder.add(controls, 'rotX').name("Rotation X(Necklace)").min(0).max(2 * Math.PI)
 necklaceFolder.add(controls, 'scaleOff3').name("Scale(Necklace)").min(-10).max(20).step(1);
 necklaceFolder.add(controls, 'necklaceType', [ 'Option 1', 'Option 2'] );
-var bottuFolder = gui.addFolder("Bottu");
+var bottuFolder = gui.addFolder("Bottu(Release)");
 bottuFolder.add(controls, 'needBottu').name("Include Bottu").listen();
-bottuFolder.add(controls, 'zOff4').name("Z offset(Bottu)").min(-1000).max(1000).step(100);
+bottuFolder.add(controls, 'zOff4').name("Z offset(Bottu)").min(-1000).max(1000).step(10);
 bottuFolder.add(controls, 'xOff4').name("X offset(Bottu)").min(-200).max(200).step(10);
 bottuFolder.add(controls, 'yOff4').name("Y offset(Bottu)").min(-200).max(200).step(10);
-var noseRingFolder = gui.addFolder("Nose Ring");
+var noseRingFolder = gui.addFolder("Nose Ring(Release)");
 noseRingFolder.add(controls, 'needNoseRing').name("Include Nose Ring").listen();
-noseRingFolder.add(controls, 'zOff5').name("Z offset(Nose Ring)").min(-1000).max(1000).step(100);
+noseRingFolder.add(controls, 'zOff5').name("Z offset(Nose Ring)").min(-1000).max(1000).step(10);
 noseRingFolder.add(controls, 'xOff5').name("X offset(Nose Ring)").min(-200).max(200).step(10);
 noseRingFolder.add(controls, 'yOff5').name("Y offset(Nose Ring)").min(-200).max(200).step(10);
-var goggleFolder = gui.addFolder("Goggles");
+var goggleFolder = gui.addFolder("Goggles(Release)");
 goggleFolder.add(controls, 'needGoggles').name("Include Goggles").listen();
 goggleFolder.add(controls, 'zOff6').name("Z offset(Goggles)").min(-1000).max(1000).step(10);
 goggleFolder.add(controls, 'xOff6').name("X offset(Goggles)").min(-200).max(200).step(10);
 goggleFolder.add(controls, 'yOff6').name("Y offset(Goggles)").min(-200).max(400).step(10);
 goggleFolder.add(controls, 'scaleOff4').name("Scale(Goggles)").min(-10).max(20).step(1);
-var shirtFolder = gui.addFolder("Shirts");
+var shirtFolder = gui.addFolder("Shirts(Alpha)");
 shirtFolder.add(controls, 'needShirt').name("Include Shirt").listen();
-shirtFolder.add(controls, 'zOff7').name("Z offset(Shirt)").min(-1000).max(1000).step(10);
+shirtFolder.add(controls, 'zOff7').name("Z offset(Shirt)").min(-1000).max(1000).step(5);
 shirtFolder.add(controls, 'xOff7').name("X offset(Shirt)").min(-500).max(500).step(10);
 shirtFolder.add(controls, 'yOff7').name("Y offset(Shirt)").min(-500).max(400).step(10);
 shirtFolder.add(controls, 'scaleOff5').name("Scale(Shirt)").min(-10).max(40).step(1);
 gui.add(controls, 'needBangle').name("Include Bangle").listen();
 gui.add(controls, 'needRing').name("Include Ring").listen();
+var neckOccluderFolder = gui.addFolder("Neck Occluder(Alpha)");
+neckOccluderFolder.add(controls, 'needNeckoccluder').name("Include Neck Occluder").listen();
+neckOccluderFolder.add(controls, 'zOff8').name("Z offset(Neck)").min(-1000).max(1000).step(10);
+neckOccluderFolder.add(controls, 'xOff8').name("X offset(Neck)").min(-500).max(500).step(10);
+neckOccluderFolder.add(controls, 'yOff8').name("Y offset(Neck)").min(-500).max(400).step(10);
+neckOccluderFolder.add(controls, 'scaleOff6').name("Scale(Neck)").min(-10).max(40).step(1);
+
 var video = document.getElementById("video");
 var canvas = document.getElementById("draw");
 var ctx = canvas.getContext("2d");
@@ -105,6 +120,8 @@ var modelHelper;
 var shouldStop = true;
 var scene = new THREE.Scene();
 var camera = new THREE.OrthographicCamera(-canvas.width/2, canvas.width/2, -canvas.height/2, canvas.height/2, -1000, 1000);
+
+
 var renderer = new THREE.WebGLRenderer({alpha: true, antialias:true });
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.shadowMap.enabled = true;
@@ -118,6 +135,13 @@ var playedOnce = false;
 var shouldRestart = true;
 var canStart = false;
 container.appendChild(renderer.domElement)
+var orbitControls = new OrbitControls(camera, renderer.domElement);
+//console.log(orbitControls);
+var camToSave = {};
+camToSave.position = camera.position.clone();
+camToSave.rotation = camera.rotation.clone();
+camToSave.controlCenter = orbitControls.target.clone();
+
 renderer.setSize( canvas.width, canvas.height );
 async function startVideo(){
     var constraints = { audio: false, video: { width: canvas.width, height: canvas.height} }; 
@@ -162,11 +186,13 @@ window.addEventListener("resize", async () => {
 })
 video.addEventListener("playing", async () => {
     if(!playedOnce){
+        loader.className = "loading-state"
         modelHelper = new ModelHelper();
         await modelHelper.load(canvas.width, canvas.height);
         canStart = true;
         console.log("CAN START LOL");
         playedOnce = true;
+        loader.className = "dormant-state"
     }
 })
 function startLandmarkVideo() {
@@ -220,6 +246,8 @@ async function startThreeJS(){
     scene.add(goggles.mesh);
     var shirt = new Shirt(await Shirt.create("./obj/shirt.obj"));
     scene.add(shirt.mesh);
+    var neck = new NeckOccluder(await NeckOccluder.create(video));
+    scene.add(neck.mesh);
 //    var bangleRight = new BangleRight(BangleRight.create());
 //    scene.add(bangleRight.mesh);
     var mask = new Mask(Mask.create({
@@ -235,9 +263,18 @@ async function startThreeJS(){
     var startThreeJSAnimation = async function (){
         var faceLandmarks = await modelHelper.predictFace(video);
         var poseLandmarks = await modelHelper.predictPose(video, canvas);
+//        console.log(poseLandmarks);
         if(!shouldStop){
             window.requestAnimationFrame(startThreeJSAnimation);
         }
+        
+        controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
+        controls.dampingFactor = 0.05;
+
+        controls.screenSpacePanning = false;
+
+        controls.minDistance = 100;
+        controls.maxDistance = 500;
         await mask.update({
             points: faceLandmarks, 
             camera: camera, 
@@ -245,6 +282,8 @@ async function startThreeJS(){
             height: canvas.height, 
             video: video
         });
+
+        
         if(controls.needEarrings == false){
             leftEarring.hide();
             rightEarring.hide();
@@ -345,6 +384,22 @@ async function startThreeJS(){
                 shirtPath: "./obj/shirt.obj"
             });
         }
+        if(controls.needNeckoccluder){
+//            console.log("HI")
+            neck.show();
+            await neck.update({
+                poses: poseLandmarks, 
+                xOff: controls.xOff8,
+                yOff: controls.yOff8,
+                zOff: controls.zOff8,
+                width: canvas.width, 
+                height: canvas.height, 
+                camera: camera,
+                widthOff: controls.scaleOff6,
+            });
+        } else {
+            neck.hide();
+        }
 //        await bangleRight.update({
 //            poses: poseLandmarks,
 //            camera: camera,
@@ -364,8 +419,20 @@ function stopVideo(){
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     scene.remove.apply(scene, scene.children);
 }
+async function resetOrbit(){
+    camera.position.set(camToSave.position.x, camToSave.position.y, camToSave.position.z);
+    camera.rotation.set(camToSave.rotation.x, camToSave.rotation.y, camToSave.rotation.z);
+
+    orbitControls.target.set(camToSave.controlCenter.x, camToSave.controlCenter.y, camToSave.controlCenter.z);
+    orbitControls.update();
+    stopVideo();
+    await startThreeJS();
+    console.log("RESETTED")
+}
 //var landmarkButton = document.getElementById("landmarkButton");
 var stopvideo = document.getElementById("stopVideo");
 var threeJS = document.getElementById("threeJS");
-stopvideo.addEventListener('click', stopVideo)
-threeJS.addEventListener('click', startThreeJS)
+var reset = document.getElementById("resetOrbit");
+stopvideo.addEventListener('click', stopVideo);
+threeJS.addEventListener('click', startThreeJS);
+reset.addEventListener('click', resetOrbit);

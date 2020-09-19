@@ -22,63 +22,7 @@ export class Necklace{
           return newPosition;
         };
         
-        const rotate = function(mesh){
-            var domShoulderLeft = domToWorld(
-                poses.keypoints[5].position.x, 
-                poses.keypoints[5].position.y
-            );
-            var domShoulderRight = domToWorld(
-                poses.keypoints[6].position.x,
-                poses.keypoints[6].position.y
-            );
-            var domArmLeft = domToWorld(
-                poses.keypoints[11].position.x, 
-                poses.keypoints[11].position.y
-            );
-            var domArmRight = domToWorld(
-                poses.keypoints[12].position.x,
-                poses.keypoints[12].position.y
-            );
-            
-            var shoulderPtLeftX = domShoulderLeft.x;
-            var shoulderPtLeftY = domShoulderLeft.y
-            
-            var shoulderPtRightX = domShoulderRight.x;
-            var shoulderPtRightY = domShoulderRight.y;
-            
-            var armPtLeftX = domArmLeft.x;
-            var armPtLeftY = domArmLeft.y
-            
-            var armPtRightX = domArmRight.x;
-            var armPtRightY = domArmRight.y;
-            
-            var distanceLeftArm = DistanceHelper.distance({
-                x1: armPtLeftX,
-                y1: armPtLeftY,
-                x2: shoulderPtLeftX,
-                y2: shoulderPtLeftY
-            });
-            
-            var distanceRightArm = DistanceHelper.distance({
-                x1: armPtRightX,
-                y1: armPtRightY,
-                x2: shoulderPtRightX,
-                y2: shoulderPtRightY
-            });
-            
-            var distanceShoulder = DistanceHelper.distance({
-                x1: shoulderPtLeftX,
-                y1: shoulderPtLeftY,
-                x2: shoulderPtRightX,
-                y2: shoulderPtRightY                
-            })
-            
-            var yRot = Math.atan(
-                (distanceRightArm, distanceLeftArm - distanceRightArm,distanceLeftArm)/
-                distanceShoulder);
-            
-            mesh.rotation.y = yRot;
-        }
+
         
         var averagedX = (poses.keypoints[5].position.x + poses.keypoints[6].position.x)/2;
         var averagedY = (poses.keypoints[5].position.y + poses.keypoints[6].position.y)/2;

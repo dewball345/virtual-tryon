@@ -24,65 +24,6 @@ export class Shirt{
           return newPosition;
         }; 
         
-        const rotate = function(mesh){
-            var domShoulderLeft = domToWorld(
-                poses.keypoints[5].position.x, 
-                poses.keypoints[5].position.y
-            );
-            var domShoulderRight = domToWorld(
-                poses.keypoints[6].position.x,
-                poses.keypoints[6].position.y
-            );
-            var domArmLeft = domToWorld(
-                poses.keypoints[7].position.x, 
-                poses.keypoints[7].position.y
-            );
-            var domArmRight = domToWorld(
-                poses.keypoints[8].position.x,
-                poses.keypoints[8].position.y
-            );
-            
-            var shoulderPtLeftX = domShoulderLeft.x;
-            var shoulderPtLeftY = domShoulderLeft.y
-            
-            var shoulderPtRightX = domShoulderRight.x;
-            var shoulderPtRightY = domShoulderRight.y;
-            
-            var armPtLeftX = domArmLeft.x;
-            var armPtLeftY = domArmLeft.y
-            
-            var armPtRightX = domArmRight.x;
-            var armPtRightY = domArmRight.y;
-            
-            var distanceLeftArm = DistanceHelper.distance({
-                x1: armPtLeftX,
-                y1: armPtLeftY,
-                x2: shoulderPtLeftX,
-                y2: shoulderPtLeftY
-            });
-            
-            var distanceRightArm = DistanceHelper.distance({
-                x1: armPtRightX,
-                y1: armPtRightY,
-                x2: shoulderPtRightX,
-                y2: shoulderPtRightY
-            });
-            
-            var distanceShoulder = DistanceHelper.distance({
-                x1: shoulderPtLeftX,
-                y1: shoulderPtLeftY,
-                x2: shoulderPtRightX,
-                y2: shoulderPtRightY                
-            })
-            
-            var yRot = Math.atan(
-                ((distanceLeftArm- distanceRightArm)/
-                distanceShoulder));
-            
-            mesh.rotation.y = yRot;
-            this.prevDom.x = domPos.x;
-            this.prevDom.y = domPos.y;
-        }
         
         if(poses.keypoints[4].score <= 0.3){
             this.hide();
@@ -97,7 +38,7 @@ export class Shirt{
         this.mesh.position.z = zOff;
         this.mesh.scale.x = 10 + scaleOff;
         this.mesh.scale.y = 10 + scaleOff;
-        this.mesh.scale.z = 10 + scaleOff;
+        this.mesh.scale.z = 20 + scaleOff;
         //rotate(this.mesh);
         this.prevDom.x = domPos.x;
         this.prevDom.y = domPos.y;
