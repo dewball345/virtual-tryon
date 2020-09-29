@@ -1,7 +1,8 @@
 export class ModelHelper{
     constructor(){
         this.facemodel;
-        this.posemodel; 
+        this.posemodel;
+        this.handmodel;
     }
     async load(width, height){
         this.facemodel = await facemesh.load(1);
@@ -10,7 +11,8 @@ export class ModelHelper{
           outputStride: 16,
           inputResolution: { width: width, height: height },
           multiplier: 0.75,
-        }); 
+        });
+        this.handmodel = await handpose.load()
     }
     
     async predictFace(video){
@@ -29,5 +31,10 @@ export class ModelHelper{
           flipHorizontal: false
         });
         return poses;        
+    }
+    
+    async predictHands(video){
+        const predictions = await this.handmodel.estimateHands(video);
+        return predictions;
     }
 }

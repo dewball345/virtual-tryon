@@ -5,7 +5,7 @@ export class NeckOccluder{
     }
     
     static create(video){
-        var geometry = new THREE.CylinderGeometry(5, 5, 20, 32);
+        var geometry = new THREE.BoxGeometry();
         var vtexture = new THREE.VideoTexture(video);
         vtexture.mapping = THREE.EquirectangularRefractionMapping;
         var material = new THREE.MeshStandardMaterial({
@@ -16,7 +16,7 @@ export class NeckOccluder{
           map: vtexture,
         });
         var sphere = new THREE.Mesh(geometry, material);
-        sphere.scale.setScalar(5);
+        sphere.scale.setScalar(40);
         sphere.name = "neck";
         sphere.castShadow = true; 
         sphere.receiveShadow = true;
@@ -24,7 +24,7 @@ export class NeckOccluder{
     }
     
     async update({poses, xOff, yOff, zOff, width, height, camera, widthOff}){
-        
+        console.log(this.mesh);
         const domToWorld = function(x, y) {
           let newPosition = new THREE.Vector3();
           let normalizedX = (x / width) * 2 - 1;
@@ -52,7 +52,7 @@ export class NeckOccluder{
             y1: domNose.y, 
             x2: domPos.x, 
             y2: domPos.y
-        })/25;
+        });
         
         this.mesh.scale.x = 5 + widthOff;
         this.mesh.scale.z = 5 + widthOff;
@@ -64,7 +64,7 @@ export class NeckOccluder{
 
         this.mesh.position.z = 0;
 //        this.mesh.rotation.x = rotX;
-
+        console.log(this.mesh.geometry.vertices);
         this.mesh.position.x += xOff;
         this.mesh.position.y += yOff;
         this.mesh.position.z += zOff;

@@ -1,4 +1,5 @@
 import {OBJLoader2} from 'https://threejsfundamentals.org/threejs/resources/threejs/r119/examples/jsm/loaders/OBJLoader2.js';
+import {DistanceHelper} from "./distanceHelper.js";
 
 export class Goggles{
     constructor(mesh){

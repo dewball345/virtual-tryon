@@ -1,4 +1,5 @@
 import {OBJLoader2} from 'https://threejsfundamentals.org/threejs/resources/threejs/r119/examples/jsm/loaders/OBJLoader2.js';
+import {DistanceHelper} from "./distanceHelper.js";
 
 export class EarringRight{
     constructor(mesh){
@@ -29,7 +30,7 @@ export class EarringRight{
             });
         });
     }
-    async update({poses, mask, xOff, yOff, zOff, width, height, camera, scaleOff, earringPath}){
+    async update({poses, mask, xOff, yOff, zOff, width, height, camera, scaleOff, earringPath, adaptive}){
         if(earringPath !== this.path){
             this.path = earringPath;
             //console.log((await EarringRight.create(earringPath)).children);
@@ -69,9 +70,21 @@ export class EarringRight{
         this.mesh.rotation.z = -this.mesh.rotation.y;
         this.mesh.rotation.y = temp;
         this.mesh.position.z = trackLeftPos.position.z + zOff;
-        this.mesh.scale.x = 10 + scaleOff;
-        this.mesh.scale.y = 10 + scaleOff;
-        this.mesh.scale.z = 10 + scaleOff;
+        
+        var domPosLeft = domToWorld(poses.keypoints[5].position.x, poses.keypoints[5].position.y);
+        var domPosRight = domToWorld(poses.keypoints[6].position.x, poses.keypoints[6].position.y);
+        if(!adaptive){
+            this.mesh.scale.x = 10 + scaleOff;
+            this.mesh.scale.y = 10 + scaleOff;
+            this.mesh.scale.z = 10 + scaleOff;
+        } else {            
+            this.mesh.scale.setScalar(DistanceHelper.distance({
+                x1: domPosLeft.x, 
+                y1: domPosLeft.y, 
+                x2: domPosRight.x, 
+                y2: domPosRight.y})/23 + scaleOff);
+        }
+        
         this.prevDom.x = domPos.x;
         this.prevDom.y = domPos.y;
     }

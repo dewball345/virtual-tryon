@@ -11,10 +11,11 @@ import {NoseRing} from "./nosering.js";
 import {Bottu} from "./bottu.js";
 import {Mask} from "./mask.js";
 import {Goggles} from "./goggles.js";
-import {BangleRight} from "./bangleRight.js";
+//import {BangleRight} from "./bangleRight.js";
 import {Shirt} from "./shirt.js";
 import {ModelHelper} from "./modelHelper.js";
 import {NeckOccluder} from "./neckOccluder.js";
+import {Ring} from './ring.js';
 
 var gui = new dat.GUI();
 var controls = {
@@ -51,6 +52,9 @@ var controls = {
             zOff8:0,
             yOff8:0,
             xOff8:0,
+            zOff9:0,
+            yOff9:0,
+            xOff9:0,
             scaleOff:0,
             scaleOff2:0,
             scaleOff3:0,
@@ -103,14 +107,18 @@ shirtFolder.add(controls, 'zOff7').name("Z offset(Shirt)").min(-1000).max(1000).
 shirtFolder.add(controls, 'xOff7').name("X offset(Shirt)").min(-500).max(500).step(10);
 shirtFolder.add(controls, 'yOff7').name("Y offset(Shirt)").min(-500).max(400).step(10);
 shirtFolder.add(controls, 'scaleOff5').name("Scale(Shirt)").min(-10).max(40).step(1);
-gui.add(controls, 'needBangle').name("Include Bangle").listen();
-gui.add(controls, 'needRing').name("Include Ring").listen();
 var neckOccluderFolder = gui.addFolder("Neck Occluder(Alpha)");
 neckOccluderFolder.add(controls, 'needNeckoccluder').name("Include Neck Occluder").listen();
 neckOccluderFolder.add(controls, 'zOff8').name("Z offset(Neck)").min(-1000).max(1000).step(10);
 neckOccluderFolder.add(controls, 'xOff8').name("X offset(Neck)").min(-500).max(500).step(10);
 neckOccluderFolder.add(controls, 'yOff8').name("Y offset(Neck)").min(-500).max(400).step(10);
-neckOccluderFolder.add(controls, 'scaleOff6').name("Scale(Neck)").min(-10).max(40).step(1);
+neckOccluderFolder.add(controls, 'scaleOff6').name("Scale(Neck)").min(-10).max(80).step(1);
+var ringFolder = gui.addFolder("Ring(Alpha)");
+ringFolder.add(controls, 'needRing').name("Include Ring").listen();
+ringFolder.add(controls, 'zOff9').name("Z offset(Ring)").min(-1000).max(1000).step(10);
+ringFolder.add(controls, 'xOff9').name("X offset(Ring)").min(-500).max(500).step(10);
+ringFolder.add(controls, 'yOff9').name("Y offset(Ring)").min(-500).max(400).step(10);
+ringFolder.add(controls, 'scaleOff6').name("Scale(Ring)").min(-10).max(40).step(1);
 
 var video = document.getElementById("video");
 var canvas = document.getElementById("draw");
@@ -119,8 +127,15 @@ var container = document.getElementById("container");
 var modelHelper;
 var shouldStop = true;
 var scene = new THREE.Scene();
-var camera = new THREE.OrthographicCamera(-canvas.width/2, canvas.width/2, -canvas.height/2, canvas.height/2, -1000, 1000);
-
+var ocamera = new THREE.OrthographicCamera(-canvas.width/2, canvas.width/2, -canvas.height/2, canvas.height/2, -1000, 1000);
+var pcamera = new THREE.PerspectiveCamera( 45, 1, 1, 1000 );
+var debug = false;
+var camera;
+if(debug){
+    camera = pcamera;
+} else {
+    camera = ocamera;
+}
 
 var renderer = new THREE.WebGLRenderer({alpha: true, antialias:true });
 renderer.setPixelRatio(window.devicePixelRatio);
@@ -200,26 +215,33 @@ function startLandmarkVideo() {
     window.requestAnimationFrame(getLandmarks)
 }
 function setLighting(){
-    var hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 1);
-    hemiLight.color.setHSL( 0.6, 1, 0.6 );
-    hemiLight.groundColor.setHSL( 0.095, 1, 0.75 );
-    hemiLight.position.set( 0, 50, 0 );
+//    var hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 2);
+//    hemiLight.color.setHSL( 0.6, 1, 0.6 );
+//    hemiLight.groundColor.setHSL( 0.095, 1, 0.75 );
+//    hemiLight.position.set( 0, 50, 0 );
+//    scene.add( hemiLight );
+//    var dirLight = new THREE.DirectionalLight( 0xffffff, 20 );
+//    dirLight.color.setHSL( 0.1, 1, 0.95 );
+//    dirLight.position.set( 0, 0, 10);
+//    dirLight.position.multiplyScalar( 30 );
+//    dirLight.target.position.set(0, 0, 0);
+//    scene.add( dirLight );
+//    scene.add(dirLight.target);
+//    dirLight.castShadow = true;
+//    dirLight.shadow.mapSize.width = 2048;
+//    dirLight.shadow.mapSize.height = 2048;
+//    var d = 50;
+//    dirLight.shadow.camera.left = - d;
+//    dirLight.shadow.camera.right = d;
+//    dirLight.shadow.camera.top = d;
+//    dirLight.shadow.camera.bottom = - d;
+//    dirLight.shadow.camera.far = 3500;
+//    dirLight.shadow.bias = - 0.0001;
+    const light = new THREE.PointLight(0xffffff, 2, 10);
+    light.position.set(0, 10, 0);
+    scene.add(light);
+    var hemiLight = new THREE.HemisphereLight( 0xffffbb, 0x080820, 2 );
     scene.add( hemiLight );
-    var dirLight = new THREE.DirectionalLight( 0xffffff, 5 );
-    dirLight.color.setHSL( 0.1, 1, 0.95 );
-    dirLight.position.set( 0, 0, 10);
-    dirLight.position.multiplyScalar( 30 );
-    scene.add( dirLight );
-    dirLight.castShadow = true;
-    dirLight.shadow.mapSize.width = 2048;
-    dirLight.shadow.mapSize.height = 2048;
-    var d = 50;
-    dirLight.shadow.camera.left = - d;
-    dirLight.shadow.camera.right = d;
-    dirLight.shadow.camera.top = d;
-    dirLight.shadow.camera.bottom = - d;
-    dirLight.shadow.camera.far = 3500;
-    dirLight.shadow.bias = - 0.0001;
 }
 async function startThreeJS(){
     shouldStop = false;
@@ -248,6 +270,8 @@ async function startThreeJS(){
     scene.add(shirt.mesh);
     var neck = new NeckOccluder(await NeckOccluder.create(video));
     scene.add(neck.mesh);
+    var ring = new Ring(Ring.create());
+    scene.add(ring.mesh);
 //    var bangleRight = new BangleRight(BangleRight.create());
 //    scene.add(bangleRight.mesh);
     var mask = new Mask(Mask.create({
@@ -263,6 +287,9 @@ async function startThreeJS(){
     var startThreeJSAnimation = async function (){
         var faceLandmarks = await modelHelper.predictFace(video);
         var poseLandmarks = await modelHelper.predictPose(video, canvas);
+        var handLandmarks = await modelHelper.predictHands(video);
+//        console.log(faceLandmarks);
+//        console.log(handLandmarks);
 //        console.log(poseLandmarks);
         if(!shouldStop){
             window.requestAnimationFrame(startThreeJSAnimation);
@@ -300,7 +327,8 @@ async function startThreeJS(){
                 yOff: controls.yOff,
                 zOff: controls.zOff,
                 scaleOff:controls.scaleOff,
-                earringPath: controls.earringType == "Option 1" ? './obj/untitled.obj' : './obj/secondearring.obj'
+                earringPath: controls.earringType == "Option 1" ? './obj/untitled.obj' : './obj/secondearring.obj',
+                adaptive: true
             });
             await rightEarring.update({
                 poses: poseLandmarks, 
@@ -312,7 +340,8 @@ async function startThreeJS(){
                 yOff: controls.yOff2,
                 zOff: controls.zOff2,
                 scaleOff: controls.scaleOff2,
-                earringPath: controls.earringType == "Option 1" ? './obj/untitled.obj' : './obj/secondearring.obj'
+                earringPath: controls.earringType == "Option 1" ? './obj/untitled.obj' : './obj/secondearring.obj',
+                adaptive: true
             }) 
         }
         if(controls.needNoseRing == false){
@@ -352,7 +381,8 @@ async function startThreeJS(){
                 zOff: controls.zOff3,
                 scaleOff: controls.scaleOff3,
                 rotX: controls.rotX,
-                necklacePath: controls.necklaceType == "Option 1" ? './obj/necklace2.obj' : './obj/necklace.obj'
+                necklacePath: controls.necklaceType == "Option 1" ? './obj/necklace2.obj' : './obj/necklace.obj',
+                adaptive: true,
             });
         }
         if(controls.needGoggles == false){
@@ -400,16 +430,24 @@ async function startThreeJS(){
         } else {
             neck.hide();
         }
-//        await bangleRight.update({
-//            poses: poseLandmarks,
-//            camera: camera,
-//            height: canvas.height,
-//            width: canvas.width,
-//            scaleOff: 0,
-//            xOff: 0,
-//            yOff: 0,
-//            zOff: 0,
-//        })
+        if(controls.needRing){
+            ring.show();
+//            console.log(handLandmarks);
+            await ring.update({
+                points: handLandmarks,
+                xOff: controls.xOff9,
+                yOff: controls.yOff9,
+                zOff: controls.zOff9,
+                scaleOff: controls.scaleOff6,
+                width: canvas.width,
+                height: canvas.height,
+                camera: camera,
+                adaptive: true,
+                rotatable:true,
+            });
+        } else {
+            ring.hide();
+        }
         renderer.render( scene, camera );
     }
     startThreeJSAnimation();

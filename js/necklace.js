@@ -7,7 +7,7 @@ export class Necklace{
         this.path = "";
         this.prevDom = {x: 0, y:0};
     }
-    async update({poses, mask, xOff, yOff, zOff, scaleOff, width, height, camera, rotX, necklacePath}){
+    async update({poses, mask, xOff, yOff, zOff, scaleOff, width, height, camera, rotX, necklacePath, adaptive}){
         if(necklacePath !== this.path){
             this.path = necklacePath;
             this.mesh.children[0].geometry = (await Necklace.create(necklacePath)).children[0].geometry
@@ -23,15 +23,16 @@ export class Necklace{
         };
         
 
-        
-        var averagedX = (poses.keypoints[5].position.x + poses.keypoints[6].position.x)/2;
-        var averagedY = (poses.keypoints[5].position.y + poses.keypoints[6].position.y)/2;
-        var domPos = domToWorld(averagedX, averagedY);
+        var domPosLeft = domToWorld(poses.keypoints[5].position.x, poses.keypoints[5].position.y);
+        var domPosRight = domToWorld(poses.keypoints[6].position.x, poses.keypoints[6].position.y);
+        var averagedX = (domPosLeft.x + domPosRight.x)/2;
+        var averagedY = (domPosLeft.y + domPosRight.y)/2;
+//        var domPos = domToWorld(averagedX, averagedY);
         
         //console.log(domPos.y + " " + this.mesh.position.y);
 
-        this.mesh.position.x = (domPos.x + this.prevDom.x)/2;
-        this.mesh.position.y = (domPos.y + this.prevDom.y)/2;  
+        this.mesh.position.x = (averagedX + this.prevDom.x)/2;
+        this.mesh.position.y = (averagedY + this.prevDom.y)/2;  
 
 
         this.mesh.position.z = 0;
@@ -41,12 +42,26 @@ export class Necklace{
         this.mesh.position.y += yOff;
         this.mesh.position.z += zOff;
         
-        this.mesh.scale.x = 10 + scaleOff;
-        this.mesh.scale.y = 10 + scaleOff;
-        this.mesh.scale.z = 10 + scaleOff;
-        
-        this.prevDom.x = domPos.x;
-        this.prevDom.y = domPos.y;
+        if(!adaptive){
+            this.mesh.scale.x = 10 + scaleOff;
+            this.mesh.scale.y = 10 + scaleOff;
+            this.mesh.scale.z = 10 + scaleOff;
+        } else {            
+            this.mesh.scale.setScalar(DistanceHelper.distance({
+                x1: domPosLeft.x, 
+                y1: domPosLeft.y, 
+                x2: domPosRight.x, 
+                y2: domPosRight.y})/23 + scaleOff);
+//            console.log(domPosRight.x);
+//            console.log(domPosLeft.x);
+//            console.log(DistanceHelper.distance({
+//                x1: domPosLeft.x, 
+//                y1: domPosLeft.y, 
+//                x2: domPosRight.x, 
+//                x2: domPosRight.y}));
+        }
+        this.prevDom.x = averagedX;
+        this.prevDom.y = averagedY;
         
 //        console.log(this.prevDom)
         //rotate(this.mesh);
