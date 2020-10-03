@@ -16,55 +16,60 @@ import {Shirt} from "./shirt.js";
 import {ModelHelper} from "./modelHelper.js";
 import {NeckOccluder} from "./neckOccluder.js";
 import {Ring} from './ring.js';
+import {Bangle} from './bangle.js'
 
 var gui = new dat.GUI();
 var controls = {
-            needEarrings: false,
-            needNecklace: false,
-            needBottu: false,
-            needNoseRing: false,
-            needBangle: false,
-            needRing: false,
-            needGoggles: false,
-            needShirt: false,
-            needNeckoccluder: false,
-            zOff: -100,
-            yOff: 60,
-            xOff: -10,
-            zOff2:-100,
-            yOff2:60,
-            xOff2:10,
-            zOff3:-700,
-            yOff3:200,
-            xOff3:-10,
-            xOff4:0,
-            yOff4:0,
-            zOff4:0,
-            xOff5:0,
-            yOff5:0,
-            zOff5:0,
-            xOff6:0,
-            yOff6:0,
-            zOff6:0,
-            xOff7:0,
-            yOff7:0,
-            zOff7:0,
-            zOff8:0,
-            yOff8:0,
-            xOff8:0,
-            zOff9:0,
-            yOff9:0,
-            xOff9:0,
-            scaleOff:0,
-            scaleOff2:0,
-            scaleOff3:0,
-            scaleOff4:0,
-            scaleOff5:0,
-            scaleOff6:0,
-            rotX:0,
-            goggleRotZ:0,
-            earringType:'Option 1',
-            necklaceType:'Option 1', 
+    needEarrings: false,
+    needNecklace: false,
+    needBottu: false,
+    needNoseRing: false,
+    needBangle: false,
+    needRing: false,
+    needGoggles: false,
+    needShirt: false,
+    needNeckoccluder: false,
+    zOff: -100,
+    yOff: 60,
+    xOff: -10,
+    zOff2:-100,
+    yOff2:60,
+    xOff2:10,
+    zOff3:-700,
+    yOff3:200,
+    xOff3:-10,
+    xOff4:0,
+    yOff4:0,
+    zOff4:0,
+    xOff5:0,
+    yOff5:0,
+    zOff5:0,
+    xOff6:0,
+    yOff6:0,
+    zOff6:0,
+    xOff7:0,
+    yOff7:0,
+    zOff7:0,
+    zOff8:0,
+    yOff8:0,
+    xOff8:0,
+    zOff9:0,
+    yOff9:0,
+    xOff9:0,
+    zOff10:0,
+    xOff10:0,
+    yOff10:0,
+    scaleOff:0,
+    scaleOff2:0,
+    scaleOff3:0,
+    scaleOff4:0,
+    scaleOff5:0,
+    scaleOff6:0,
+    scaleOff7:0,
+    rotX:0,
+    goggleRotZ:0,
+    earringType:'Option 1',
+    necklaceType:'Option 1', 
 }
 var earringFolder = gui.addFolder("Earrings(Pre-Release/Release)");
 earringFolder.add(controls, 'needEarrings').name("Include Earrings").listen();
@@ -118,7 +123,13 @@ ringFolder.add(controls, 'needRing').name("Include Ring").listen();
 ringFolder.add(controls, 'zOff9').name("Z offset(Ring)").min(-1000).max(1000).step(10);
 ringFolder.add(controls, 'xOff9').name("X offset(Ring)").min(-500).max(500).step(10);
 ringFolder.add(controls, 'yOff9').name("Y offset(Ring)").min(-500).max(400).step(10);
-ringFolder.add(controls, 'scaleOff6').name("Scale(Ring)").min(-10).max(40).step(1);
+ringFolder.add(controls, 'scaleOff6').name("Scale(Ring)").min(-40).max(40).step(1);
+var bangleFolder = gui.addFolder("Bangle(Alpha)");
+bangleFolder.add(controls, 'needBangle').name("Include Bangle").listen();
+bangleFolder.add(controls, 'zOff10').name("Z offset(Bangle)").min(-1000).max(1000).step(10);
+bangleFolder.add(controls, 'xOff10').name("X offset(Bangle)").min(-500).max(500).step(10);
+bangleFolder.add(controls, 'yOff10').name("Y offset(Bangle)").min(-500).max(400).step(10);
+bangleFolder.add(controls, 'scaleOff7').name("Scale(Bangle)").min(-40).max(40).step(1);
 
 var video = document.getElementById("video");
 var canvas = document.getElementById("draw");
@@ -215,28 +226,6 @@ function startLandmarkVideo() {
     window.requestAnimationFrame(getLandmarks)
 }
 function setLighting(){
-//    var hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 2);
-//    hemiLight.color.setHSL( 0.6, 1, 0.6 );
-//    hemiLight.groundColor.setHSL( 0.095, 1, 0.75 );
-//    hemiLight.position.set( 0, 50, 0 );
-//    scene.add( hemiLight );
-//    var dirLight = new THREE.DirectionalLight( 0xffffff, 20 );
-//    dirLight.color.setHSL( 0.1, 1, 0.95 );
-//    dirLight.position.set( 0, 0, 10);
-//    dirLight.position.multiplyScalar( 30 );
-//    dirLight.target.position.set(0, 0, 0);
-//    scene.add( dirLight );
-//    scene.add(dirLight.target);
-//    dirLight.castShadow = true;
-//    dirLight.shadow.mapSize.width = 2048;
-//    dirLight.shadow.mapSize.height = 2048;
-//    var d = 50;
-//    dirLight.shadow.camera.left = - d;
-//    dirLight.shadow.camera.right = d;
-//    dirLight.shadow.camera.top = d;
-//    dirLight.shadow.camera.bottom = - d;
-//    dirLight.shadow.camera.far = 3500;
-//    dirLight.shadow.bias = - 0.0001;
     const light = new THREE.PointLight(0xffffff, 2, 10);
     light.position.set(0, 10, 0);
     scene.add(light);
@@ -270,10 +259,10 @@ async function startThreeJS(){
     scene.add(shirt.mesh);
     var neck = new NeckOccluder(await NeckOccluder.create(video));
     scene.add(neck.mesh);
-    var ring = new Ring(Ring.create());
+    var ring = new Ring(await Ring.create("./obj/ring.obj"));
     scene.add(ring.mesh);
-//    var bangleRight = new BangleRight(BangleRight.create());
-//    scene.add(bangleRight.mesh);
+    var bangle = new Bangle(Bangle.create());
+    scene.add(bangle.mesh);
     var mask = new Mask(Mask.create({
         points: await modelHelper.predictFace(video), 
         camera: camera, 
@@ -442,11 +431,30 @@ async function startThreeJS(){
                 width: canvas.width,
                 height: canvas.height,
                 camera: camera,
-                adaptive: true,
+//                adaptive: true,
+                adaptive:false,
                 rotatable:true,
             });
         } else {
             ring.hide();
+        }
+        if(controls.needBangle){
+//            console.log("OKAY");
+            bangle.show();
+            bangle.update({
+                points: handLandmarks, 
+                xOff: controls.xOff10, 
+                yOff: controls.yOff10, 
+                zOff: controls.zOff10, 
+                scaleOff: controls.scaleOff7, 
+                adaptive: true, 
+                rotatable: true,
+                width: canvas.width,
+                height: canvas.height,
+                camera: camera
+            });
+        } else {
+            bangle.hide();
         }
         renderer.render( scene, camera );
     }

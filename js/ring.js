@@ -1,47 +1,39 @@
-//TEACH CORNELL NOTES
+import {OBJLoader2} from 'https://threejsfundamentals.org/threejs/resources/threejs/r119/examples/jsm/loaders/OBJLoader2.js';
 import {DistanceHelper} from './distanceHelper.js'
+import {RotHelper} from './rotHelper.js'
 
-class RotHelper{
-    static rotX({z1, y1, z2, y2}){
-//        console.log(z2-z1);
-        var m = (y2-y1)/(z2-z1)
-//        console.log(m);
-//        console.log("(" + y2 + "-" + y1 + ")/" + "(" + z2 + "-" + z1 + ")")
-        return Math.atan(m);
-    }
-    static rotZ({x1, z1, x2, z2}){
-        var m = (z2-z1)/(x2-x1)
-//        console.log(m);
-//        console.log("(" + y2 + "-" + y1 + ")/" + "(" + z2 + "-" + z1 + ")")
-        return Math.atan(m);    
-    }
-    static rotY({x1, y1, x2, y2}){
-        var m = (y2-y1)/(x2-x1)
-//        console.log(m);
-//        console.log("(" + y2 + "-" + y1 + ")/" + "(" + z2 + "-" + z1 + ")")
-        return Math.atan(m);    
-    }
-}
 export class Ring{
     constructor(mesh){
         this.mesh = mesh;
     }
-    static create(){
-        var geometry = new THREE.BoxGeometry();
-        var material = new THREE.MeshStandardMaterial({
-              color: 0xff2010,
-              roughness: 0.4,
-              metalness: 0.1,
-              transparent: true,
+    static create(objPath) {
+        this.path = objPath;
+        return new Promise((resolve, reject) => {
+            const objLoader = new OBJLoader2();
+            var loader = objLoader.load(objPath, (root) => {
+                //console.log("FUNCTION: " + objLoader.load);
+                var material = new THREE.MeshStandardMaterial({
+                      color: 0xD4AF37,
+                      roughness: 0.4,
+                      metalness: 0.1,
+                      transparent: true,
+                });
+                //console.log(root);
+                root.children[0].material = material;
+                root.scale.setScalar(10);
+                root.name = "left";
+                root.castShadow = true; 
+                root.receiveShadow = true;
+                root.rotation.x = -90;
+                resolve(root);
+                console.log("Called!")
+            });
         });
-        var cubeRing = new THREE.Mesh(geometry, material);
-        cubeRing.scale.setScalar(5);
-        return cubeRing;
     }
     
 //    static #rotateX(){
 //    d
-    async update({
+    update({
         points, 
         xOff, 
         yOff, 
@@ -103,19 +95,21 @@ export class Ring{
                 z2: -tracking[2], 
                 y2: domPos.y
             });
-            this.mesh.rotation.z = -RotHelper.rotZ({
+            this.mesh.rotation.z = RotHelper.rotZ({
                 x1: domPosMiddle.x,
                 z1: -middleBottom[2],
                 x2: domPosBottom.x,
                 z2: -trackingBottom[2]
             });
-            this.mesh.rotation.y = RotHelper.rotY({
-                x1: domPos.x,
-                y1: domPos.y,
-                x2: domPosUpper.x,
-                y2: domPosUpper.y
-            });
+//            console.log(this.mesh.rotation.z);
+//            this.mesh.rotation.y = RotHelper.rotY({
+//                x1: domPos.x,
+//                y1: domPos.y,
+//                x2: domPosUpper.x,
+//                y2: domPosUpper.y
+//            });
 //            console.log(this.mesh.rotation.x);
+//              this.mesh.rotation.y += 0.1;
         }
     }
     hide(){
