@@ -16,7 +16,8 @@ import {Shirt} from "./shirt.js";
 import {ModelHelper} from "./modelHelper.js";
 import {NeckOccluder} from "./neckOccluder.js";
 import {Ring} from './ring.js';
-import {Bangle} from './bangle.js'
+import {Bangle} from './bangle.js';
+import {HeadLocket} from './headLocket.js';
 
 var gui = new dat.GUI();
 var controls = {
@@ -29,6 +30,7 @@ var controls = {
     needGoggles: false,
     needShirt: false,
     needNeckoccluder: false,
+    needHeadLocket: false,
     zOff: -100,
     yOff: 60,
     xOff: -10,
@@ -59,6 +61,9 @@ var controls = {
     zOff10:0,
     xOff10:0,
     yOff10:0,
+    zOff11:0,
+    xOff11:0,
+    yOff11:0,
     scaleOff:0,
     scaleOff2:0,
     scaleOff3:0,
@@ -66,6 +71,7 @@ var controls = {
     scaleOff5:0,
     scaleOff6:0,
     scaleOff7:0,
+    scaleOff8:0,
     rotX:0,
     goggleRotZ:0,
     earringType:'Option 1',
@@ -129,7 +135,13 @@ bangleFolder.add(controls, 'needBangle').name("Include Bangle").listen();
 bangleFolder.add(controls, 'zOff10').name("Z offset(Bangle)").min(-1000).max(1000).step(10);
 bangleFolder.add(controls, 'xOff10').name("X offset(Bangle)").min(-500).max(500).step(10);
 bangleFolder.add(controls, 'yOff10').name("Y offset(Bangle)").min(-500).max(400).step(10);
-bangleFolder.add(controls, 'scaleOff7').name("Scale(Bangle)").min(-40).max(40).step(1);
+bangleFolder.add(controls, 'scaleOff7').name("Scale(Bangle)").min(-80).max(40).step(1);
+var headLocketFolder = gui.addFolder("Head Locket(Alpha)");
+headLocketFolder.add(controls, 'needHeadLocket').name("Include Head Locket").listen();
+headLocketFolder.add(controls, 'zOff11').name("Z offset(Head Locket)").min(-1000).max(1000).step(10);
+headLocketFolder.add(controls, 'xOff11').name("X offset(Head Locket)").min(-500).max(500).step(10);
+headLocketFolder.add(controls, 'yOff11').name("Y offset(Head Locket)").min(-500).max(400).step(10);
+headLocketFolder.add(controls, 'scaleOff8').name("Scale(Head Locket)").min(-80).max(40).step(1);
 
 var video = document.getElementById("video");
 var canvas = document.getElementById("draw");
@@ -261,7 +273,7 @@ async function startThreeJS(){
     scene.add(neck.mesh);
     var ring = new Ring(await Ring.create("./obj/ring.obj"));
     scene.add(ring.mesh);
-    var bangle = new Bangle(Bangle.create());
+    var bangle = new Bangle(await Bangle.create("./obj/ring.obj"));
     scene.add(bangle.mesh);
     var mask = new Mask(Mask.create({
         points: await modelHelper.predictFace(video), 
@@ -271,6 +283,8 @@ async function startThreeJS(){
         video: video
     }));
     scene.add(mask.mesh)
+    var headLocket = new HeadLocket(HeadLocket.create());
+    scene.add(headLocket.mesh);
     camera.position.z = 5;
     loader.className = "dormant-state";
     var startThreeJSAnimation = async function (){
@@ -447,7 +461,7 @@ async function startThreeJS(){
                 yOff: controls.yOff10, 
                 zOff: controls.zOff10, 
                 scaleOff: controls.scaleOff7, 
-                adaptive: true, 
+                adaptive: false, 
                 rotatable: true,
                 width: canvas.width,
                 height: canvas.height,
@@ -455,6 +469,18 @@ async function startThreeJS(){
             });
         } else {
             bangle.hide();
+        }
+        if(controls.needHeadLocket){
+            headLocket.show();
+            headLocket.update({
+                mask: mask.mesh, 
+                xOff: controls.xOff11, 
+                yOff: controls.yOff11, 
+                zOff: controls.zOff11, 
+                scaleOff: controls.scaleOff8,
+            });
+        } else {
+            headLocket.hide();
         }
         renderer.render( scene, camera );
     }

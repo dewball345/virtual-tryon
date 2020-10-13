@@ -1,3 +1,4 @@
+import {OBJLoader2} from 'https://threejsfundamentals.org/threejs/resources/threejs/r119/examples/jsm/loaders/OBJLoader2.js';
 import {DistanceHelper} from "./distanceHelper.js";
 import {RotHelper} from "./rotHelper.js";
 
@@ -5,16 +6,29 @@ export class Bangle{
     constructor(mesh){
         this.mesh = mesh;
     }
-    static create(){
-        var geometry = new THREE.BoxGeometry;
-        var material = new THREE.MeshStandardMaterial({
-            color: 0xaaaa11,
-            roughness: 0.4,
-            metalness: 0.1,
-            transparent: true,
+    static create(objPath) {
+        this.path = objPath;
+        return new Promise((resolve, reject) => {
+            const objLoader = new OBJLoader2();
+            var loader = objLoader.load(objPath, (root) => {
+                //console.log("FUNCTION: " + objLoader.load);
+                var material = new THREE.MeshStandardMaterial({
+                      color: 0xD4AF37,
+                      roughness: 0.4,
+                      metalness: 0.1,
+                      transparent: true,
+                });
+                //console.log(root);
+                root.children[0].material = material;
+                root.scale.setScalar(10);
+                root.name = "left";
+                root.castShadow = true; 
+                root.receiveShadow = true;
+                root.rotation.x = -90;
+                resolve(root);
+                console.log("Called!")
+            });
         });
-        var mesh = new THREE.Mesh(geometry, material);
-        return mesh;
     }
     update({
         points, 
@@ -80,19 +94,19 @@ export class Bangle{
                 z2: -thumb[2], 
                 y2: domThumb.y
             });
-            this.mesh.rotation.y = RotHelper.rotY({
-                x1: domPinky.x, 
-                y1: domPinky.y, 
-                x2: domThumb.x, 
-                y2: domThumb.y
-            });
-//            this.mesh.rotation.z = RotHelper.rotZ({
+//            this.mesh.rotation.y = RotHelper.rotY({
 //                x1: domPinky.x, 
-//                z1: -domPinky[2], 
+//                y1: domPinky.y, 
 //                x2: domThumb.x, 
-//                z2: -domThumb[2]
+//                y2: domThumb.y
 //            });
-            console.log(this.mesh);
+            this.mesh.rotation.z = RotHelper.rotZ({
+                x1: domPinky.x, 
+                z1: -pinky[2], 
+                x2: domThumb.x, 
+                z2: -thumb[2]
+            });
+//            console.log(this.mesh);
         }
     }
     hide(){
