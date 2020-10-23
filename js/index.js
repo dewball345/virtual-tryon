@@ -73,6 +73,9 @@ var controls = {
     scaleOff7:0,
     scaleOff8:0,
     rotX:0,
+    xRot1:0,
+    yRot1:0,
+    zRot1:0,
     goggleRotZ:0,
     earringType:'Option 1',
     necklaceType:'Option 1', 
@@ -141,6 +144,9 @@ headLocketFolder.add(controls, 'needHeadLocket').name("Include Head Locket").lis
 headLocketFolder.add(controls, 'zOff11').name("Z offset(Head Locket)").min(-1000).max(1000).step(10);
 headLocketFolder.add(controls, 'xOff11').name("X offset(Head Locket)").min(-500).max(500).step(10);
 headLocketFolder.add(controls, 'yOff11').name("Y offset(Head Locket)").min(-500).max(400).step(10);
+headLocketFolder.add(controls, 'xRot1').name("Xrot Offset(HeadLocket)").min(-1000).max(1000).step(10);
+headLocketFolder.add(controls, 'yRot1').name("Yrot Offset(HeadLocket)").min(-500).max(500).step(10);
+headLocketFolder.add(controls, 'zRot1').name("Zrot Offset(HeadLocket)").min(-500).max(400).step(10);
 headLocketFolder.add(controls, 'scaleOff8').name("Scale(Head Locket)").min(-80).max(40).step(1);
 
 var video = document.getElementById("video");
@@ -478,6 +484,9 @@ async function startThreeJS(){
                 yOff: controls.yOff11, 
                 zOff: controls.zOff11, 
                 scaleOff: controls.scaleOff8,
+                xRot: controls.xRot1,
+                yRot: controls.yRot1,
+                zRot: controls.zRot1,
             });
         } else {
             headLocket.hide();

@@ -1,3 +1,5 @@
+import {OBJLoader2} from 'https://threejsfundamentals.org/threejs/resources/threejs/r119/examples/jsm/loaders/OBJLoader2.js';
+
 export class HeadLocket{
     constructor(mesh){
         this.mesh = mesh;
@@ -17,7 +19,7 @@ export class HeadLocket{
         sphere.receiveShadow = true;
         return sphere;
     }
-    update({mask, xOff, yOff, zOff, scaleOff}){
+    update({mask, xOff, yOff, zOff, scaleOff, xRot, yRot, zRot}){
         const trackBottu = mask.geometry.track(338 , 10 , 151);
         this.mesh.position.copy(trackBottu.position);
         this.mesh.rotation.setFromRotationMatrix(trackBottu.rotation);
@@ -26,14 +28,22 @@ export class HeadLocket{
         this.mesh.rotation.x *= -1;
         this.mesh.rotation.y *= -1;
 //        this.mesh.rotation.z *= -1; 
-
-        this.mesh.position.z += zOff;
-        this.mesh.position.y += yOff;
-        this.mesh.position.x += xOff;
+        var xPos = this.mesh.position.x;
+        var yPos = this.mesh.position.y;
+        var zPos = this.mesh.position.z;
         
-        this.mesh.scale.x = scaleOff;
-        this.mesh.scale.y = scaleOff;
-        this.mesh.scale.z = scaleOff;
+        this.mesh.position.z = zPos + zOff;
+        this.mesh.position.y = yPos + yOff;
+        this.mesh.position.x = xPos + xOff;
+        
+        
+        this.mesh.scale.x = 5+scaleOff;
+        this.mesh.scale.y = 5+scaleOff;
+        this.mesh.scale.z = 5+scaleOff;
+        
+        this.mesh.rotation.x += xRot;
+        this.mesh.rotation.y += yRot;
+        this.mesh.rotation.z += zRot;
     }
     hide(){
         //console.log(this.mesh);
