@@ -1,9 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Questrial&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=PT+Serif:wght@400;700&display=swap');
 
 *{
-    font-family: 'Questrial', sans-serif;
+    font-family: 'PT Serif', serif;
+/*    color: #AC3B61;*/
 }
 html, body{
+
     height:100%;
     margin:auto;
 }
@@ -12,9 +15,11 @@ body{
     margin: auto;
 /*    margin-top: 5%;*/
     background-color: #EDC7B7;
+/*    background-color: #28262C;*/
 }
 .title{
-    background-color: #AC3B61; 
+    background-color: #AC3B61;
+    font-weight: 700;
 }
 button {
     position:relative;
