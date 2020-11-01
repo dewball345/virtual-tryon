@@ -1,5 +1,6 @@
 "use strict";
 
+//import statements
 import {TRIANGULATION} from '../third-party/triangulation.js';
 import { FaceMeshFaceGeometry } from '../third-party/face.js';
 import {OBJLoader2} from 'https://threejsfundamentals.org/threejs/resources/threejs/r119/examples/jsm/loaders/OBJLoader2.js';
@@ -14,180 +15,209 @@ import {Goggles} from "./goggles.js";
 //import {BangleRight} from "./bangleRight.js";
 import {Shirt} from "./shirt.js";
 import {ModelHelper} from "./modelHelper.js";
+import {ControlsHelper} from "./controlsHelper.js"
 import {NeckOccluder} from "./neckOccluder.js";
 import {Ring} from './ring.js';
 import {Bangle} from './bangle.js';
 import {HeadLocket} from './headLocket.js';
 
+//initialize dat.GUI(Interface for controls)
 var gui = new dat.GUI();
-var controls = {
-    needEarrings: false,
-    needNecklace: false,
-    needBottu: false,
-    needNoseRing: false,
-    needBangle: false,
-    needRing: false,
-    needGoggles: false,
-    needShirt: false,
-    needNeckoccluder: false,
-    needHeadLocket: false,
-    zOff: -100,
-    yOff: 60,
-    xOff: -10,
-    zOff2:-100,
-    yOff2:60,
-    xOff2:10,
-    zOff3:-700,
-    yOff3:200,
-    xOff3:-10,
-    xOff4:0,
-    yOff4:0,
-    zOff4:0,
-    xOff5:0,
-    yOff5:0,
-    zOff5:0,
-    xOff6:0,
-    yOff6:0,
-    zOff6:0,
-    xOff7:0,
-    yOff7:0,
-    zOff7:0,
-    zOff8:0,
-    yOff8:0,
-    xOff8:0,
-    zOff9:0,
-    yOff9:0,
-    xOff9:0,
-    zOff10:0,
-    xOff10:0,
-    yOff10:0,
-    zOff11:0,
-    xOff11:0,
-    yOff11:0,
-    scaleOff:0,
-    scaleOff2:0,
-    scaleOff3:0,
-    scaleOff4:0,
-    scaleOff5:0,
-    scaleOff6:0,
-    scaleOff7:0,
-    scaleOff8:0,
-    rotX:0,
-    xRot1:0,
-    yRot1:0,
-    zRot1:0,
-    goggleRotZ:0,
-    earringType:'Option 1',
-    necklaceType:'Option 1', 
-}
-var earringFolder = gui.addFolder("Earrings(Pre-Release/Release)");
-earringFolder.add(controls, 'needEarrings').name("Include Earrings").listen();
-earringFolder.add(controls, 'zOff').name("Z offset(Earring: left)").min(-1000).max(1000).step(10);
-earringFolder.add(controls, 'xOff').name("X offset(Earring: left)").min(-200).max(200).step(10);
-earringFolder.add(controls, 'yOff').name("Y offset(Earring: left)").min(-200).max(200).step(10);
-earringFolder.add(controls, 'scaleOff').name("Scale(Earring: Left)").min(-5).max(10).step(1);
-earringFolder.add(controls, 'scaleOff2').name("Scale(Earring: Right)").min(-5).max(10).step(1);
-earringFolder.add(controls, 'zOff2').name("Z offset(Earring: right)").min(-1000).max(1000).step(100);
-earringFolder.add(controls, 'xOff2').name("X offset(Earring: right)").min(-200).max(200).step(10);
-earringFolder.add(controls, 'yOff2').name("Y offset(Earring: right)").min(-200).max(200).step(10);
-earringFolder.add(controls, 'earringType', [ 'Option 1', 'Option 2'] );
-var necklaceFolder = gui.addFolder("Necklace(Pre-Release/Release)");
-necklaceFolder.add(controls, 'needNecklace').name("Include Necklace").listen();
-necklaceFolder.add(controls, 'zOff3').name("Z offset(Necklace)").min(-1000).max(1000).step(10);
-necklaceFolder.add(controls, 'xOff3').name("X offset(Necklace)").min(-200).max(200).step(10);
-necklaceFolder.add(controls, 'yOff3').name("Y offset(Necklace)").min(-200).max(400).step(10);
-necklaceFolder.add(controls, 'rotX').name("Rotation X(Necklace)").min(0).max(2 * Math.PI)
-necklaceFolder.add(controls, 'scaleOff3').name("Scale(Necklace)").min(-10).max(20).step(1);
-necklaceFolder.add(controls, 'necklaceType', [ 'Option 1', 'Option 2'] );
-var bottuFolder = gui.addFolder("Bottu(Release)");
-bottuFolder.add(controls, 'needBottu').name("Include Bottu").listen();
-bottuFolder.add(controls, 'zOff4').name("Z offset(Bottu)").min(-1000).max(1000).step(10);
-bottuFolder.add(controls, 'xOff4').name("X offset(Bottu)").min(-200).max(200).step(10);
-bottuFolder.add(controls, 'yOff4').name("Y offset(Bottu)").min(-200).max(200).step(10);
-var noseRingFolder = gui.addFolder("Nose Ring(Release)");
-noseRingFolder.add(controls, 'needNoseRing').name("Include Nose Ring").listen();
-noseRingFolder.add(controls, 'zOff5').name("Z offset(Nose Ring)").min(-1000).max(1000).step(10);
-noseRingFolder.add(controls, 'xOff5').name("X offset(Nose Ring)").min(-200).max(200).step(10);
-noseRingFolder.add(controls, 'yOff5').name("Y offset(Nose Ring)").min(-200).max(200).step(10);
-var goggleFolder = gui.addFolder("Goggles(Release)");
-goggleFolder.add(controls, 'needGoggles').name("Include Goggles").listen();
-goggleFolder.add(controls, 'zOff6').name("Z offset(Goggles)").min(-1000).max(1000).step(10);
-goggleFolder.add(controls, 'xOff6').name("X offset(Goggles)").min(-200).max(200).step(10);
-goggleFolder.add(controls, 'yOff6').name("Y offset(Goggles)").min(-200).max(400).step(10);
-goggleFolder.add(controls, 'scaleOff4').name("Scale(Goggles)").min(-10).max(20).step(1);
-var shirtFolder = gui.addFolder("Shirts(Alpha)");
-shirtFolder.add(controls, 'needShirt').name("Include Shirt").listen();
-shirtFolder.add(controls, 'zOff7').name("Z offset(Shirt)").min(-1000).max(1000).step(5);
-shirtFolder.add(controls, 'xOff7').name("X offset(Shirt)").min(-500).max(500).step(10);
-shirtFolder.add(controls, 'yOff7').name("Y offset(Shirt)").min(-500).max(400).step(10);
-shirtFolder.add(controls, 'scaleOff5').name("Scale(Shirt)").min(-10).max(40).step(1);
-var neckOccluderFolder = gui.addFolder("Neck Occluder(Alpha)");
-neckOccluderFolder.add(controls, 'needNeckoccluder').name("Include Neck Occluder").listen();
-neckOccluderFolder.add(controls, 'zOff8').name("Z offset(Neck)").min(-1000).max(1000).step(10);
-neckOccluderFolder.add(controls, 'xOff8').name("X offset(Neck)").min(-500).max(500).step(10);
-neckOccluderFolder.add(controls, 'yOff8').name("Y offset(Neck)").min(-500).max(400).step(10);
-neckOccluderFolder.add(controls, 'scaleOff6').name("Scale(Neck)").min(-10).max(80).step(1);
-var ringFolder = gui.addFolder("Ring(Alpha)");
-ringFolder.add(controls, 'needRing').name("Include Ring").listen();
-ringFolder.add(controls, 'zOff9').name("Z offset(Ring)").min(-1000).max(1000).step(10);
-ringFolder.add(controls, 'xOff9').name("X offset(Ring)").min(-500).max(500).step(10);
-ringFolder.add(controls, 'yOff9').name("Y offset(Ring)").min(-500).max(400).step(10);
-ringFolder.add(controls, 'scaleOff6').name("Scale(Ring)").min(-40).max(40).step(1);
-var bangleFolder = gui.addFolder("Bangle(Alpha)");
-bangleFolder.add(controls, 'needBangle').name("Include Bangle").listen();
-bangleFolder.add(controls, 'zOff10').name("Z offset(Bangle)").min(-1000).max(1000).step(10);
-bangleFolder.add(controls, 'xOff10').name("X offset(Bangle)").min(-500).max(500).step(10);
-bangleFolder.add(controls, 'yOff10').name("Y offset(Bangle)").min(-500).max(400).step(10);
-bangleFolder.add(controls, 'scaleOff7').name("Scale(Bangle)").min(-80).max(40).step(1);
-var headLocketFolder = gui.addFolder("Head Locket(Alpha)");
-headLocketFolder.add(controls, 'needHeadLocket').name("Include Head Locket").listen();
-headLocketFolder.add(controls, 'zOff11').name("Z offset(Head Locket)").min(-1000).max(1000).step(10);
-headLocketFolder.add(controls, 'xOff11').name("X offset(Head Locket)").min(-500).max(500).step(10);
-headLocketFolder.add(controls, 'yOff11').name("Y offset(Head Locket)").min(-500).max(400).step(10);
-headLocketFolder.add(controls, 'xRot1').name("Xrot Offset(HeadLocket)").min(-1000).max(1000).step(10);
-headLocketFolder.add(controls, 'yRot1').name("Yrot Offset(HeadLocket)").min(-500).max(500).step(10);
-headLocketFolder.add(controls, 'zRot1').name("Zrot Offset(HeadLocket)").min(-500).max(400).step(10);
-headLocketFolder.add(controls, 'scaleOff8').name("Scale(Head Locket)").min(-80).max(40).step(1);
+//initialize controlshelper(map with different settings to customize with)
+var settings = new ControlsHelper();
 
+//Initialize Earring Folder
+var earringFolder = gui.addFolder("Earrings(Pre-Release/Release)");
+earringFolder.add(settings.earrings, 'enabled')
+    .name("Include Earrings").listen();
+earringFolder.add(settings.earrings.left, 'zOff')
+    .name("Z offset(Earring: left)").min(-1000).max(1000).step(10);
+earringFolder.add(settings.earrings.left, 'xOff')
+    .name("X offset(Earring: left)").min(-200).max(200).step(10);
+earringFolder.add(settings.earrings.left, 'yOff')
+    .name("Y offset(Earring: left)").min(-200).max(200).step(10);
+earringFolder.add(settings.earrings.left, 'scaleOff')
+    .name("Scale(Earring: Left)").min(-5).max(10).step(1);
+earringFolder.add(settings.earrings.right, 'scaleOff')
+    .name("Scale(Earring: Right)").min(-5).max(10).step(1);
+earringFolder.add(settings.earrings.right, 'zOff')
+    .name("Z offset(Earring: right)").min(-1000).max(1000).step(100);
+earringFolder.add(settings.earrings.right, 'xOff')
+    .name("X offset(Earring: right)").min(-200).max(200).step(10);
+earringFolder.add(settings.earrings.right, 'yOff')
+    .name("Y offset(Earring: right)").min(-200).max(200).step(10);
+earringFolder.add(settings.earrings, 'earringType', [ 'Option 1', 'Option 2'] );
+//Initialize Necklace Folder
+var necklaceFolder = gui.addFolder("Necklace(Pre-Release/Release)");
+necklaceFolder.add(settings.necklace, 'enabled')
+    .name("Include Necklace").listen();
+necklaceFolder.add(settings.necklace, 'zOff')
+    .name("Z offset(Necklace)").min(-1000).max(1000).step(10);
+necklaceFolder.add(settings.necklace, 'xOff')
+    .name("X offset(Necklace)").min(-200).max(200).step(10);
+necklaceFolder.add(settings.necklace, 'yOff')
+    .name("Y offset(Necklace)").min(-200).max(400).step(10);
+necklaceFolder.add(settings.necklace, 'rotation')
+    .name("Rotation X(Necklace)").min(0).max(2 * Math.PI)
+necklaceFolder.add(settings.necklace, 'scaleOff')
+    .name("Scale(Necklace)").min(-10).max(20).step(1);
+necklaceFolder.add(settings.necklace, 'necklaceType', [ 'Option 1', 'Option 2'] );
+//Initialize bottu folder
+var bottuFolder = gui.addFolder("Bottu(Release)");
+bottuFolder.add(settings.bottu, 'enabled')
+    .name("Include Bottu").listen();
+bottuFolder.add(settings.bottu, 'zOff')
+    .name("Z offset(Bottu)").min(-1000).max(1000).step(10);
+bottuFolder.add(settings.bottu, 'xOff')
+    .name("X offset(Bottu)").min(-200).max(200).step(10);
+bottuFolder.add(settings.bottu, 'yOff')
+    .name("Y offset(Bottu)").min(-200).max(200).step(10);
+//Initialize Nose Ring Folder
+var noseRingFolder = gui.addFolder("Nose Ring(Release)");
+noseRingFolder.add(settings.nosering, 'enabled')
+    .name("Include Nose Ring").listen();
+noseRingFolder.add(settings.nosering, 'zOff')
+    .name("Z offset(Nose Ring)").min(-1000).max(1000).step(10);
+noseRingFolder.add(settings.nosering, 'xOff')
+    .name("X offset(Nose Ring)").min(-200).max(200).step(10);
+noseRingFolder.add(settings.nosering, 'yOff')
+    .name("Y offset(Nose Ring)").min(-200).max(200).step(10);
+//Initialize Goggle Folder
+var goggleFolder = gui.addFolder("Goggles(Release)");
+goggleFolder.add(settings.goggles, 'enabled')
+    .name("Include Goggles").listen();
+goggleFolder.add(settings.goggles, 'zOff')
+    .name("Z offset(Goggles)").min(-1000).max(1000).step(10);
+goggleFolder.add(settings.goggles, 'xOff')
+    .name("X offset(Goggles)").min(-200).max(200).step(10);
+goggleFolder.add(settings.goggles, 'yOff')
+    .name("Y offset(Goggles)").min(-200).max(400).step(10);
+goggleFolder.add(settings.goggles, 'scaleOff')
+    .name("Scale(Goggles)").min(-10).max(20).step(1);
+//Initialize Shirt Folder
+var shirtFolder = gui.addFolder("Shirts(Alpha)");
+shirtFolder.add(settings.shirt, 'enabled')
+    .name("Include Shirt").listen();
+shirtFolder.add(settings.shirt, 'zOff')
+    .name("Z offset(Shirt)").min(-1000).max(1000).step(5);
+shirtFolder.add(settings.shirt, 'xOff')
+    .name("X offset(Shirt)").min(-500).max(500).step(10);
+shirtFolder.add(settings.shirt, 'yOff')
+    .name("Y offset(Shirt)").min(-500).max(400).step(10);
+shirtFolder.add(settings.shirt, 'scaleOff')
+    .name("Scale(Shirt)").min(-10).max(40).step(1);
+//Initialize Neck Occluder Folder
+var neckOccluderFolder = gui.addFolder("Neck Occluder(Alpha)");
+neckOccluderFolder.add(settings.neck, 'enabled')
+    .name("Include Neck Occluder").listen();
+neckOccluderFolder.add(settings.neck, 'zOff')
+    .name("Z offset(Neck)").min(-1000).max(1000).step(10);
+neckOccluderFolder.add(settings.neck, 'xOff')
+    .name("X offset(Neck)").min(-500).max(500).step(10);
+neckOccluderFolder.add(settings.neck, 'yOff')
+    .name("Y offset(Neck)").min(-500).max(400).step(10);
+neckOccluderFolder.add(settings.neck, 'scaleOff')
+    .name("Scale(Neck)").min(-10).max(80).step(1);
+//Initialize Ring Folder
+var ringFolder = gui.addFolder("Ring(Alpha)");
+ringFolder.add(settings.ring, 'enabled')
+    .name("Include Ring").listen();
+ringFolder.add(settings.ring, 'zOff')
+    .name("Z offset(Ring)").min(-1000).max(1000).step(10);
+ringFolder.add(settings.ring, 'xOff')
+    .name("X offset(Ring)").min(-500).max(500).step(10);
+ringFolder.add(settings.ring, 'yOff')
+    .name("Y offset(Ring)").min(-500).max(400).step(10);
+ringFolder.add(settings.ring, 'scaleOff')
+    .name("Scale(Ring)").min(-40).max(40).step(1);
+//Initialize Bangle Folder
+var bangleFolder = gui.addFolder("Bangle(Alpha)");
+bangleFolder.add(settings.bangle, 'enabled')
+    .name("Include Bangle").listen();
+bangleFolder.add(settings.bangle, 'zOff')
+    .name("Z offset(Bangle)").min(-1000).max(1000).step(10);
+bangleFolder.add(settings.bangle, 'xOff')
+    .name("X offset(Bangle)").min(-500).max(500).step(10);
+bangleFolder.add(settings.bangle, 'yOff')
+    .name("Y offset(Bangle)").min(-500).max(400).step(10);
+bangleFolder.add(settings.bangle, 'scaleOff')
+    .name("Scale(Bangle)").min(-80).max(40).step(1);
+//Initialize Head Locket Folder
+var headLocketFolder = gui.addFolder("Head Locket(Alpha)");
+headLocketFolder.add(settings.headlocket, 'enabled')
+    .name("Include Head Locket").listen();
+headLocketFolder.add(settings.headlocket, 'zOff')
+    .name("Z offset(Head Locket)").min(-1000).max(1000).step(10);
+headLocketFolder.add(settings.headlocket, 'xOff')
+    .name("X offset(Head Locket)").min(-500).max(500).step(10);
+headLocketFolder.add(settings.headlocket, 'yOff')
+    .name("Y offset(Head Locket)").min(-500).max(400).step(10);
+headLocketFolder.add(settings.headlocket, 'xRot')
+    .name("Xrot Offset(HeadLocket)").min(-1000).max(1000).step(10);
+headLocketFolder.add(settings.headlocket, 'yRot')
+    .name("Yrot Offset(HeadLocket)").min(-500).max(500).step(10);
+headLocketFolder.add(settings.headlocket, 'zRot')
+    .name("Zrot Offset(HeadLocket)").min(-500).max(400).step(10);
+headLocketFolder.add(settings.headlocket, 'scaleOff')
+    .name("Scale(Head Locket)").min(-80).max(40).step(1);
+//access video element
 var video = document.getElementById("video");
+//access canvas element
 var canvas = document.getElementById("draw");
 var ctx = canvas.getContext("2d");
+//access width and height(for sizing)
 var container = document.getElementById("container");
+//setting variable modelHelper as blank
+//(model helper is a class with handpose facemesh 
+//enabled so user doesnt have to instantiate it)
 var modelHelper;
+//shouldStop checks whether or not to stop the program
 var shouldStop = true;
+//initialize scene(blank world)
 var scene = new THREE.Scene();
+//initialize variables for orthographic and perspective camera
 var ocamera = new THREE.OrthographicCamera(-canvas.width/2, canvas.width/2, -canvas.height/2, canvas.height/2, -1000, 1000);
 var pcamera = new THREE.PerspectiveCamera( 45, 1, 1, 1000 );
 var debug = false;
+var controls = {};
+//uses orthographic or perspective camera based on debug variable
 var camera;
 if(debug){
     camera = pcamera;
 } else {
     camera = ocamera;
 }
-
+//initialize Renderer
 var renderer = new THREE.WebGLRenderer({alpha: true, antialias:true });
+//render settings
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.outputEncoding = THREE.sRGBEncoding;
-var zOffset = 0;
+//Loader element
 var loader = document.getElementById("loader");
+//Width and height variable(possible for resizing idk)
 let width = 0;
 let height = 0;
+//playedOnce variable to check how many times video.addeventlistener(playing)
+//executed. Sometimes it may run twice but idk really i may not need it
 var playedOnce = false;
-var shouldRestart = true;
+//Checks to see if I can start program
 var canStart = false;
+//adds renderer to html
 container.appendChild(renderer.domElement)
+//initialize OrbitControls(to look around scene)
 var orbitControls = new OrbitControls(camera, renderer.domElement);
-//console.log(orbitControls);
+////console.log(orbitControls);\
+//used to reset orbitControls
 var camToSave = {};
 camToSave.position = camera.position.clone();
 camToSave.rotation = camera.rotation.clone();
 camToSave.controlCenter = orbitControls.target.clone();
-
+//sets renderer size to proper width and height
 renderer.setSize( canvas.width, canvas.height );
 async function startVideo(){
+    //initializes video
     var constraints = { audio: false, video: { width: canvas.width, height: canvas.height} }; 
     try{
         var stream = await navigator.mediaDevices.getUserMedia(constraints);
@@ -197,6 +227,7 @@ async function startVideo(){
     }
 }
 function setWidths(){
+    //sets width of canvas based on screen size
     const w =Math.min(window.innerWidth, window.innerHeight)/1.5;
     const h = Math.min(window.innerWidth, window.innerHeight)/1.5;
     container.width = w;
@@ -212,12 +243,15 @@ function setWidths(){
     video.style.width = w + "px";
     video.style.height = h + "px";
 }
-console.log("HELLO LOL");
+//for debugging purposes
+console.log("Program started");
 console.log(video)
+//resizes and starts video
 setWidths();
 resize();
 startVideo();
 function resize(){
+    //resizes three.js camera based on screen size
     camera.left = -.5 * canvas.width;
     camera.right = .5 * canvas.width;
     camera.top = -.5 * canvas.height;
@@ -225,12 +259,16 @@ function resize(){
     camera.updateProjectionMatrix(); 
     renderer.setSize(canvas.width, canvas.height)
 }
+//resizes camera when window size changes
 window.addEventListener("resize", async () => {
     resize();
 })
+
 video.addEventListener("playing", async () => {
     if(!playedOnce){
+        //sets loader state to loading
         loader.className = "loading-state"
+        //initializes model helper(see class)
         modelHelper = new ModelHelper();
         await modelHelper.load(canvas.width, canvas.height);
         canStart = true;
@@ -252,21 +290,25 @@ function setLighting(){
 }
 async function startThreeJS(){
     shouldStop = false;
+    //sets loader to loading
     loader.className = "loading-state"
     setLighting();
+    //adds earrings to scene
     var leftEarring = new EarringLeft(await EarringLeft.create(
-        controls.earringType == "Option 1" ? './obj/untitled.obj' : './obj/secondearring.obj'));
+        settings.earrings.earringType == "Option 1" ? './obj/untitled.obj' : './obj/secondearring.obj'));
     scene.add(leftEarring.mesh);
     var rightEarring = new EarringRight(await EarringRight.create(
-        controls.earringType == "Option 1" ? './obj/untitled.obj' : './obj/secondearring.obj'));
-    scene.add(rightEarring.mesh);      
-    if(controls.necklaceType == "Option 1"){
+        settings.earrings.earringType == "Option 1" ? './obj/untitled.obj' : './obj/secondearring.obj'));
+    scene.add(rightEarring.mesh); 
+    //adds necklace to scene
+    if(settings.necklace.necklaceType == "Option 1"){
         var necklace = new Necklace(await Necklace.create("./obj/necklace.obj"));
         scene.add(necklace.mesh);       
     } else {
         var necklace = new Necklace(await Necklace.create("./obj/necklace2.obj"));
         scene.add(necklace.mesh);
     }
+    //adds other jewelry to scene
     var noseRing = new NoseRing(NoseRing.create());
     scene.add(noseRing.mesh);
     var bottu = new Bottu(Bottu.create());
@@ -292,25 +334,28 @@ async function startThreeJS(){
     var headLocket = new HeadLocket(HeadLocket.create());
     scene.add(headLocket.mesh);
     camera.position.z = 5;
+    //sets loader to dormant(inactive)
     loader.className = "dormant-state";
     var startThreeJSAnimation = async function (){
+        //gets landmarks
         var faceLandmarks = await modelHelper.predictFace(video);
         var poseLandmarks = await modelHelper.predictPose(video, canvas);
         var handLandmarks = await modelHelper.predictHands(video);
 //        console.log(faceLandmarks);
 //        console.log(handLandmarks);
 //        console.log(poseLandmarks);
+        //if not stop then play animation
         if(!shouldStop){
             window.requestAnimationFrame(startThreeJSAnimation);
         }
         
+        //initialize OrbitControl settings
         controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
         controls.dampingFactor = 0.05;
-
         controls.screenSpacePanning = false;
-
         controls.minDistance = 100;
         controls.maxDistance = 500;
+        //update face mesh
         await mask.update({
             points: faceLandmarks, 
             camera: camera, 
@@ -318,9 +363,8 @@ async function startThreeJS(){
             height: canvas.height, 
             video: video
         });
-
-        
-        if(controls.needEarrings == false){
+        //hide/show earrings and update
+        if(settings.earrings.enabled == false){
             leftEarring.hide();
             rightEarring.hide();
         } else {
@@ -332,11 +376,11 @@ async function startThreeJS(){
                 height: canvas.height,
                 width: canvas.width,
                 mask: mask.mesh,
-                xOff: controls.xOff,
-                yOff: controls.yOff,
-                zOff: controls.zOff,
-                scaleOff:controls.scaleOff,
-                earringPath: controls.earringType == "Option 1" ? './obj/untitled.obj' : './obj/secondearring.obj',
+                xOff: settings.earrings.left.xOff,
+                yOff: settings.earrings.left.yOff,
+                zOff: settings.earrings.left.zOff,
+                scaleOff:settings.earrings.left.scaleOff,
+                earringPath: settings.earrings.earringType == "Option 1" ? './obj/untitled.obj' : './obj/secondearring.obj',
                 adaptive: true
             });
             await rightEarring.update({
@@ -345,37 +389,40 @@ async function startThreeJS(){
                 height: canvas.height,
                 width: canvas.width,
                 mask: mask.mesh,
-                xOff: controls.xOff2, 
-                yOff: controls.yOff2,
-                zOff: controls.zOff2,
-                scaleOff: controls.scaleOff2,
-                earringPath: controls.earringType == "Option 1" ? './obj/untitled.obj' : './obj/secondearring.obj',
+                xOff: settings.earrings.right.xOff,
+                yOff: settings.earrings.right.yOff,
+                zOff: settings.earrings.right.zOff,
+                scaleOff:settings.earrings.right.scaleOff,
+                earringPath: settings.earrings.earringType == "Option 1" ? './obj/untitled.obj' : './obj/secondearring.obj',
                 adaptive: true
             }) 
         }
-        if(controls.needNoseRing == false){
+        //HS&U nosering
+        if(settings.nosering.enabled == false){
             noseRing.hide();
         } else {
             noseRing.show();
             noseRing.update({
                 mask: mask.mesh,
-                xOff: 0,
-                yOff: 0,
-                zOff: 0
+                xOff: settings.nosering.xOff,
+                yOff: settings.nosering.yOff,
+                zOff: settings.nosering.zOff
             });
         }
-        if(controls.needBottu == false){
+        //HS&U bottu
+        if(settings.bottu.enabled == false){
             bottu.hide();
         } else {
             bottu.show();
             bottu.update({
                 mask: mask.mesh,
-                zOff: 10,
-                xOff: 0,
-                yOff:0
+                zOff: settings.bottu.zOff,
+                xOff: settings.bottu.xOff,
+                yOff: settings.bottu.yOff
             });
         }
-        if(controls.needNecklace == false){
+        //HS&U necklace
+        if(settings.necklace.enabled == false){
             necklace.hide();
         } else {
             necklace.show();
@@ -385,69 +432,73 @@ async function startThreeJS(){
                 height: canvas.height,
                 width: canvas.width,
                 mask: mask.mesh,
-                xOff: controls.xOff3,
-                yOff: controls.yOff3,
-                zOff: controls.zOff3,
-                scaleOff: controls.scaleOff3,
-                rotX: controls.rotX,
-                necklacePath: controls.necklaceType == "Option 1" ? './obj/necklace2.obj' : './obj/necklace.obj',
+                xOff: settings.necklace.xOff,
+                yOff: settings.necklace.yOff,
+                zOff: settings.necklace.zOff,
+                scaleOff: settings.necklace.scaleOff,
+                rotX: settings.necklace.rotation,
+                necklacePath: settings.necklace.necklaceType == "Option 1" ? './obj/necklace2.obj' : './obj/necklace.obj',
                 adaptive: true,
             });
         }
-        if(controls.needGoggles == false){
+        //HS&U goggles
+        if(settings.goggles.enabled == false){
             goggles.hide();
         } else {
             goggles.show();
             await goggles.update({
                 mask: mask.mesh,
-                zOff: controls.zOff6,
-                xOff: controls.xOff6,
-                yOff:controls.yOff6,
-                scaleOff: controls.scaleOff4
+                zOff: settings.goggles.zOff,
+                xOff: settings.goggles.xOff,
+                yOff: settings.goggles.yOff,
+                scaleOff: settings.goggles.scaleOff
             });
         }
-        if(controls.needShirt == false){
+        //HS&U shirt
+        if(settings.shirt.enabled == false){
             shirt.hide();
         } else {
 //            console.log("hello");
             shirt.show();
             await shirt.update({
                 poses: poseLandmarks, 
-                xOff: controls.xOff7, 
-                yOff: controls.yOff7, 
-                zOff: controls.zOff7, 
+                xOff: settings.shirt.xOff, 
+                yOff: settings.shirt.yOff, 
+                zOff: settings.shirt.zOff, 
                 width: canvas.width, 
                 height: canvas.height, 
-                scaleOff: controls.scaleOff5, 
+                scaleOff: settings.shirt.scaleOff, 
                 camera: camera, 
                 shirtPath: "./obj/shirt.obj"
             });
         }
-        if(controls.needNeckoccluder){
+        //HS&U neck
+        if(settings.neck.enabled){
 //            console.log("HI")
             neck.show();
             await neck.update({
                 poses: poseLandmarks, 
-                xOff: controls.xOff8,
-                yOff: controls.yOff8,
-                zOff: controls.zOff8,
+                xOff: settings.neck.xOff,
+                yOff: settings.neck.yOff,
+                zOff: settings.neck.zOff,
                 width: canvas.width, 
                 height: canvas.height, 
                 camera: camera,
-                widthOff: controls.scaleOff6,
+                widthOff: settings.controls.scaleOff,
             });
         } else {
             neck.hide();
         }
-        if(controls.needRing){
+        //HS&U ring
+        if(settings.ring.enabled){
             ring.show();
 //            console.log(handLandmarks);
             await ring.update({
                 points: handLandmarks,
-                xOff: controls.xOff9,
-                yOff: controls.yOff9,
-                zOff: controls.zOff9,
-                scaleOff: controls.scaleOff6,
+                xOff: settings.ring.xOff,
+                yOff: settings.ring.yOff,
+                zOff: settings.ring.zOff,
+                scaleOff: settings.ring.scaleOff,
                 width: canvas.width,
                 height: canvas.height,
                 camera: camera,
@@ -458,15 +509,16 @@ async function startThreeJS(){
         } else {
             ring.hide();
         }
-        if(controls.needBangle){
+        //HS&U bangle
+        if(settings.bangle.enabled){
 //            console.log("OKAY");
             bangle.show();
             bangle.update({
                 points: handLandmarks, 
-                xOff: controls.xOff10, 
-                yOff: controls.yOff10, 
-                zOff: controls.zOff10, 
-                scaleOff: controls.scaleOff7, 
+                xOff: settings.bangle.xOff, 
+                yOff: settings.bangle.yOff, 
+                zOff: settings.bangle.zOff, 
+                scaleOff: settings.bangle.scaleOff, 
                 adaptive: false, 
                 rotatable: true,
                 width: canvas.width,
@@ -476,30 +528,35 @@ async function startThreeJS(){
         } else {
             bangle.hide();
         }
-        if(controls.needHeadLocket){
+        //HS&U headlocket
+        if(settings.headlocket.enabled){
             headLocket.show();
             headLocket.update({
                 mask: mask.mesh, 
-                xOff: controls.xOff11, 
-                yOff: controls.yOff11, 
-                zOff: controls.zOff11, 
-                scaleOff: controls.scaleOff8,
-                xRot: controls.xRot1,
-                yRot: controls.yRot1,
-                zRot: controls.zRot1,
+                xOff: settings.headlocket.xOff, 
+                yOff: settings.headlocket.yOff, 
+                zOff: settings.headlocket.zOff, 
+                scaleOff: settings.headlocket.scaleOff,
+                xRot: settings.headlocket.xRot,
+                yRot: settings.headlocket.yRot,
+                zRot: settings.headlocket.zRot,
             });
         } else {
             headLocket.hide();
         }
+        //render scene
         renderer.render( scene, camera );
     }
+    //call animation function
     startThreeJSAnimation();
 }
+//function to stop video - clears canvas
 function stopVideo(){
     shouldStop = true;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     scene.remove.apply(scene, scene.children);
 }
+//resets orbit controls
 async function resetOrbit(){
     camera.position.set(camToSave.position.x, camToSave.position.y, camToSave.position.z);
     camera.rotation.set(camToSave.rotation.x, camToSave.rotation.y, camToSave.rotation.z);
@@ -511,9 +568,11 @@ async function resetOrbit(){
     console.log("RESETTED")
 }
 //var landmarkButton = document.getElementById("landmarkButton");
+//gets ids of buttons for each
 var stopvideo = document.getElementById("stopVideo");
 var threeJS = document.getElementById("threeJS");
 var reset = document.getElementById("resetOrbit");
+//wires functions to buttons
 stopvideo.addEventListener('click', stopVideo);
 threeJS.addEventListener('click', startThreeJS);
 reset.addEventListener('click', resetOrbit);

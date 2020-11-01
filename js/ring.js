@@ -46,7 +46,7 @@ export class Ring{
         rotatable,
     }){
 //        console.log(tracking);
-        console.log(points);
+//        console.log(points);
         try{
             var tracking = points[0].annotations.indexFinger[1];
             var upperTracking = points[0].annotations.indexFinger[2];
