@@ -16,9 +16,10 @@ export class ModelHelper{
     }
     
     async predictFace(video){
+//        var cloned = Object.assign({}, video)
         var faces;
-        video.width = 0;
-        video.height = 0;
+//        cloned.width = 0;
+//        cloned.height = 0;
         faces = await this.facemodel.estimateFaces(video, false, true);
         return faces[0];
     }

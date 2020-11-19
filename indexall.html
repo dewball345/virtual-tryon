@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    </head>
+    <body>
+        <link rel="stylesheet" href="style.css">
+
+        
+<!--        <div id = "center"></div>-->
+        <table>
+            <tr>
+                <td>
+                   <h1>Jewellery Tryon <span style="font-size:20px">(BETA)</span></h1>
+<!--                   <h4>WARNING: RESIZING WINDOW MAY CRASH PROGRAM!</h4>-->
+                    <a href="info.html"><h5>What is this - instructions</h5></a>
+                    <div id = "container">
+                        <video autoplay="true" id="video"></video>
+                        <canvas id = "draw" ></canvas>
+                        <button id = "stopVideo" ><h6>Stop/Pause</h6></button>
+                        <button id = "threeJS"><h6>Play/Resume</h6></button>
+                        <button id = "resetOrbit"><h6>Reset Orbit Controls</h6></button>
+                        <div id = "loader" class = "dormant-state"></div>
+                    </div>
+                </td>
+                <td>
+                </td>
+            </tr>
+        </table>
+        
+        
+        
+        <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl"></script>
+<!--        <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm/dist/tf-backend-wasm.js"></script>-->
+        <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/facemesh"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/posenet"></script>
+        <script src="https://unpkg.com/@tensorflow-models/handpose@0.0.6/dist/handpose.js"></script>
+        <script src = "third-party/dat.gui.js"></script>
+        <script src="https://threejs.org/build/three.js"></script>
+        <script src="./third-party/face.js" type="module"></script>
+        <script src="./third-party/geometry.js" type="module"></script>
+        <script src="./third-party/triangulation.js" type="module"></script>
+        <script src="./third-party/OBJLoader.js" type="module"></script>
+        <script src="./js/earringLeft.js" type="module"></script>
+        <script src="./js/earringRight.js" type="module"></script>
+        <script src="./js/necklace.js" type="module"></script>
+        <script src="./js/nosering.js" type="module"></script>
+        <script src = "./js/goggles.js" type="module"></script>
+        <script src="./js/mask.js" type="module"></script>
+<!--        <script src = "./js/bangleRight.js" type="module"></script>-->
+        <script src="./js/shirt.js" type="module"></script>
+        <script src="./js/distanceHelper.js" type="module"></script>
+        <script src="./js/rotHelper.js" type="module"></script>
+        <script src="./js/modelHelper.js" type="module"></script>
+        <script src="./js/controlsHelper.js" type="module"></script>
+        <script src="./js/neckOccluder.js" type="module"></script>
+        <script src="./js/ring.js" type="module"></script>
+        <script src="./js/bangle.js" type="module"></script>
+        <script src="./js/headLocket.js" type="module"></script>
+        <script src="./js/index.js" type="module"></script>
+        
+    </body>
+
+<!--
+    <footer>
+
+    </footer>
+-->
+
+</html>

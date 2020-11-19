@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@300&display=swap');
+            *{
+                font-family: 'Work Sans'
+            }
+            #container{
+                margin-left: 20px;
+                margin-bottom:20px;
+                
+            }
+            h1{
+                margin-left: 20px;
+                margin-bottom:-20px;
+                color: #ff6363;
+            }
+            h6{
+                margin-left:20px;
+                color: #ff6363;
+            }
+            #video{
+                border-radius:20px;
+                box-shadow:  18px 18px 36px #15152a, 
+             -18px -18px 36px #2b2b56;
+            }
+            html{
+                background-color: #202040;
+            }
+            
+        </style>
+    </head>
+    <body>
+        <h1>Gaggle Glasses</h1>
+        <h6>Family owned, trendy, hand-crafted glasses</h6>
+        <div id = "container" style="position:relative">
+            <video autoplay="true" id="video" width="450" height="450" style="position: absolute"></video>
+            <video autoplay="true" id="placeholder" width="0" height="0" style="position: absolute"></video>
+            <canvas id = "draw" width="450" height="450" style="position: absolute"></canvas>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/facemesh"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/posenet"></script>
+        <script src="https://unpkg.com/@tensorflow-models/handpose@0.0.6/dist/handpose.js"></script>
+        <script src="https://threejs.org/build/three.js"></script>
+        <script src="./third-party/face.js" type="module"></script>
+        <script src="./third-party/geometry.js" type="module"></script>
+        <script src="./third-party/triangulation.js" type="module"></script>
+        <script src="./third-party/OBJLoader.js" type="module"></script>
+        <script src = "./js/goggles.js" type="module"></script>
+        <script src="./js/mask.js" type="module"></script>
+        <script src="./js/modelHelper.js" type="module"></script>
+        <script src="./js/indexgoggles.js" type="module"></script>
+        
+    </body>
+    <h3>see instructions in jewellery playground</h3>
+</html>

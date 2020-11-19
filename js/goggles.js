@@ -1,12 +1,14 @@
 import {OBJLoader2} from 'https://threejsfundamentals.org/threejs/resources/threejs/r119/examples/jsm/loaders/OBJLoader2.js';
-import {DistanceHelper} from "./distanceHelper.js";
+//import {DistanceHelper} from "./distanceHelper.js";
 
 export class Goggles{
     constructor(mesh){
         this.mesh = mesh
     }
     async update({mask, xOff, yOff, zOff, scaleOff}){
+//        console.log(mask);
         const trackBottu = mask.geometry.track(55, 8, 9);
+//        console.log(this.mesh)
         this.mesh.position.copy(trackBottu.position);
         this.mesh.rotation.setFromRotationMatrix(trackBottu.rotation);
 
