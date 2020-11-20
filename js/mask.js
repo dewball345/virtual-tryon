@@ -16,7 +16,7 @@ export class Mask{
     }
     static create({points, camera, width, height, video}){
         const faceGeometry = new FaceMeshFaceGeometry({useVideoTexture: true});
-
+        console.log(points);
         const w = width;
         const h = height;
         camera.left = .5 * width;
@@ -41,6 +41,7 @@ export class Mask{
         material.map = videoTexture;
         const mask = new THREE.Mesh(faceGeometry, material);
         mask.receiveShadow = mask.castShadow = true;
+//        console.log("Called!")
         return mask;
     }
 }

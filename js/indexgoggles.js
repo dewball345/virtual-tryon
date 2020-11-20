@@ -78,7 +78,7 @@ async function startThreeJs(){
             height: canvas.height,
             video: video   
         });
-        
+        console.log(facepoints);
         //update goggles
         await goggles.update({
             mask: mask.mesh, 
