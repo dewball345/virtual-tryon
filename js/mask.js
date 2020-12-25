@@ -16,7 +16,7 @@ export class Mask{
     }
     static create({points, camera, width, height, video}){
         const faceGeometry = new FaceMeshFaceGeometry({useVideoTexture: true});
-        console.log(points);
+//        console.log(points);
         const w = width;
         const h = height;
         camera.left = .5 * width;
@@ -29,13 +29,15 @@ export class Mask{
         faceGeometry.setSize(width, height);
         faceGeometry.update(points, true);
         
-        var material = new THREE.MeshStandardMaterial({
-          color: 0xffffee,
-          roughness: 0.8,
-          metalness: 0.1,
-          map:null,
-          transparent: true,
-        });
+//        var material = new THREE.MeshStandardMaterial({
+//          color: 0xffffee,
+//          roughness: 0.8,
+//          metalness: 0.1,
+//          map:null,
+//          transparent: true,
+////          opacity:1
+//        });
+        var material = new THREE.MeshBasicMaterial()
         const videoTexture = new THREE.VideoTexture(video);
         videoTexture.encoding = THREE.sRGBEncoding;
         material.map = videoTexture;

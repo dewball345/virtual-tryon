@@ -5,13 +5,13 @@ export class ControlsHelper{
             earringType: "Option 2",
             left: {
                 xOff: 0,
-                yOff:0,
+                yOff:-40,
                 zOff:0,
                 scaleOff:0
             },
             right: {
                 xOff:0,
-                yOff:0,
+                yOff:-40,
                 zOff:0,
                 scaleOff:0
             }
@@ -21,7 +21,7 @@ export class ControlsHelper{
             enabled:false,
             xOff: 0,
             yOff: 0,
-            zOff: 0,
+            zOff: -20,
             scaleOff:0,
             rotation:0,
             necklaceType: "Option 2"
@@ -44,7 +44,7 @@ export class ControlsHelper{
         this.goggles = {
             enabled:false,
             xOff:0,
-            yOff:0,
+            yOff:-20,
             zOff:0,
             scaleOff:0
         };
@@ -89,6 +89,17 @@ export class ControlsHelper{
             scaleOff:0,
             xRot:0,
             yRot:0,
+            zRot:0
+        }
+        
+        this.facemask = {
+            enabled:false,
+            xOff:0,
+            yOff:-30,
+            zOff:30,
+            scaleOff:-5,
+            xRot:0,
+            yRot:8,
             zRot:0
         }
     }

@@ -44,6 +44,9 @@ h6{
     position:relative;
     border-radius:20px;    
 }
+#label{
+    margin-bottom: -20px;
+}
 #video{
 /*    width: 700px;*/
 /*    height: 450px;*/
@@ -90,6 +93,11 @@ canvas{
 }
 
 .dormant-state{
+}
+
+#loading-text{
+    color: #AC3B61;
+/*    margin-top:-20px;*/
 }
 
 footer{

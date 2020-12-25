@@ -48,13 +48,13 @@ export class EarringRight{
           return newPosition;
         };  
 
-        if(poses.keypoints[3].score <= 0.3){
+        if(poses.poseLandmarks[7].score <= 0.1){
             this.hide();
             return;
         } 
         var domPos = domToWorld(
-            poses.keypoints[3].position.x, 
-            poses.keypoints[3].position.y
+            poses.poseLandmarks[7].x * width, 
+            poses.poseLandmarks[7].y * height
         );
         
         this.mesh.position.x = (domPos.x + this.prevDom.x)/2 + xOff;
@@ -65,14 +65,14 @@ export class EarringRight{
         
         this.mesh.rotation.setFromRotationMatrix(trackLeftRot.rotation);
         
-        var temp = this.mesh.rotation.z;
+//        var temp = this.mesh.rotation.z;
         this.mesh.rotation.x += -90 / 180 * Math.PI;
-        this.mesh.rotation.z = -this.mesh.rotation.y;
-        this.mesh.rotation.y = temp;
+//        this.mesh.rotation.z = this.mesh.rotation.y;
+//        this.mesh.rotation.y = temp;
         this.mesh.position.z = trackLeftPos.position.z + zOff;
         
-        var domPosLeft = domToWorld(poses.keypoints[5].position.x, poses.keypoints[5].position.y);
-        var domPosRight = domToWorld(poses.keypoints[6].position.x, poses.keypoints[6].position.y);
+        var domPosLeft = domToWorld(poses.poseLandmarks[11].x * width, poses.poseLandmarks[11].y * height);
+        var domPosRight = domToWorld(poses.poseLandmarks[12].x * width, poses.poseLandmarks[12].y * height);
         if(!adaptive){
             this.mesh.scale.x = 10 + scaleOff;
             this.mesh.scale.y = 10 + scaleOff;

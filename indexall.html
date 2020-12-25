@@ -11,9 +11,10 @@
         <table>
             <tr>
                 <td>
-                   <h1>Jewellery Tryon <span style="font-size:20px">(BETA)</span></h1>
+                   <h1 id = "label">Jewellery Tryon <span style="font-size:20px">(BETA)</span></h1>
 <!--                   <h4>WARNING: RESIZING WINDOW MAY CRASH PROGRAM!</h4>-->
                     <a href="info.html"><h5>What is this - instructions</h5></a>
+                    <h3 id="loading-text"></h3>
                     <div id = "container">
                         <video autoplay="true" id="video"></video>
                         <canvas id = "draw" ></canvas>
@@ -30,19 +31,25 @@
         
         
         
-        <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core@2.4.0/dist/tf-core.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl@2.4.0"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter@2.4.0/dist/tf-converter.min.js"></script>
 <!--        <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm/dist/tf-backend-wasm.js"></script>-->
-        <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/facemesh"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/facemesh@0.0.4"></script>
         <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/posenet"></script>
         <script src="https://unpkg.com/@tensorflow-models/handpose@0.0.6/dist/handpose.js"></script>
+        
+<!--        <script src="https://cdn.jsdelivr.net/npm/@mediapipe/holistic/holistic.js" crossorigin="anonymous"></script>-->
+        <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js" crossorigin="anonymous"></script>
+<!--        <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>-->
+        
         <script src = "third-party/dat.gui.js"></script>
         <script src="https://threejs.org/build/three.js"></script>
         <script src="./third-party/face.js" type="module"></script>
         <script src="./third-party/geometry.js" type="module"></script>
         <script src="./third-party/triangulation.js" type="module"></script>
         <script src="./third-party/OBJLoader.js" type="module"></script>
+        
         <script src="./js/earringLeft.js" type="module"></script>
         <script src="./js/earringRight.js" type="module"></script>
         <script src="./js/necklace.js" type="module"></script>
@@ -54,11 +61,13 @@
         <script src="./js/distanceHelper.js" type="module"></script>
         <script src="./js/rotHelper.js" type="module"></script>
         <script src="./js/modelHelper.js" type="module"></script>
+<!--        <script src="./js/holistic.js" type="module"></script>-->
         <script src="./js/controlsHelper.js" type="module"></script>
         <script src="./js/neckOccluder.js" type="module"></script>
         <script src="./js/ring.js" type="module"></script>
         <script src="./js/bangle.js" type="module"></script>
         <script src="./js/headLocket.js" type="module"></script>
+        <script src="./js/facemask.js" type="module"></script>
         <script src="./js/index.js" type="module"></script>
         
     </body>

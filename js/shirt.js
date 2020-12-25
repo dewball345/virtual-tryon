@@ -25,23 +25,25 @@ export class Shirt{
         }; 
         
         
-        if(poses.keypoints[4].score <= 0.3){
-            this.hide();
-            return;
-        }
+//        if(poses.keypoints[4].score <= 0.3){
+//            this.hide();
+//            return;
+//        }
         
-        var averagedX = (poses.keypoints[5].position.x + poses.keypoints[6].position.x)/2;
-        var averagedY = (poses.keypoints[5].position.y + poses.keypoints[6].position.y)/2;
-        var domPos = domToWorld(averagedX, averagedY);
-        this.mesh.position.x = (domPos.x + this.prevDom.x)/2 + xOff;
-        this.mesh.position.y = (domPos.y + this.prevDom.y)/2 + yOff;
+        var domPosLeft = domToWorld(poses.poseLandmarks[11].x * width, poses.poseLandmarks[11].y * height);
+        var domPosRight = domToWorld(poses.poseLandmarks[12].x * width, poses.poseLandmarks[12].y * height);
+        var averagedX = (domPosLeft.x + domPosRight.x)/2;
+        var averagedY = (domPosLeft.y + domPosRight.y)/2;
+//        var domPos = domToWorld(averagedX, averagedY);
+        this.mesh.position.x = (averagedX + this.prevDom.x)/2 + xOff;
+        this.mesh.position.y = (averagedY + this.prevDom.y)/2 + yOff;
         this.mesh.position.z = zOff;
         this.mesh.scale.x = 10 + scaleOff;
         this.mesh.scale.y = 10 + scaleOff;
         this.mesh.scale.z = 20 + scaleOff;
         //rotate(this.mesh);
-        this.prevDom.x = domPos.x;
-        this.prevDom.y = domPos.y;
+        this.prevDom.x = averagedX;
+        this.prevDom.y = averagedY;
     }
     static create(objPath) {
         this.path = objPath;

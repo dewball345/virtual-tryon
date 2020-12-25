@@ -1,3 +1,6 @@
+const foomppose = new Pose({locateFile: (file) => {
+  return `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`;
+}});
 export class ModelHelper{
     constructor(){
         this.facemodel;
@@ -6,12 +9,24 @@ export class ModelHelper{
     }
     async load(width, height){
         this.facemodel = await facemesh.load(1);
+        
+//        this.mppose = foomppose
+
+        
         this.posemodel = await posenet.load({
           architecture: 'MobileNetV1',
           outputStride: 16,
           inputResolution: { width: width, height: height },
           multiplier: 0.75,
+          quantBytes:4,
         });
+//        this.posemodel = await posenet.load({
+//          architecture: 'ResNet50',
+//          outputStride: 32,
+//          inputResolution: { width: width, height: height},
+//          quantBytes: 2
+//        });
+        
         this.handmodel = await handpose.load()
     }
     

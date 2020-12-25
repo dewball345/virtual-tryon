@@ -56,6 +56,7 @@ class FaceMeshFaceGeometry extends BufferGeometry {
   update(face, cameraFlipped) {
     let ptr = 0;
     for (const p of face.scaledMesh) {
+//      console.log(p)
       this.positions[ptr] = cameraFlipped
         ? p[0] + 0.5 * (this.w)
         : p[0] - 0.5 * (this.w);

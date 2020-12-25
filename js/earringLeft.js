@@ -15,6 +15,8 @@ export class EarringLeft{
 //            console.log("Howdy");
         }
         
+//        console.log("scaled: " + poses.poseLandmarks[8].x * 500)
+        
         const domToWorld = function(x, y) {
           let newPosition = new THREE.Vector3();
           let normalizedX = (x / width) * 2 - 1;
@@ -26,28 +28,30 @@ export class EarringLeft{
 //        console.log("POSES EARRING")
 //        console.log(poses)
         
-        if(poses.keypoints[4].score <= 0.3){
+        if(poses.poseLandmarks[8].score <= 0.1){
             this.hide();
             return;
         }
         var domPos = domToWorld(
-            poses.keypoints[4].position.x, 
-            poses.keypoints[4].position.y
+            poses.poseLandmarks[8].x * width, 
+            poses.poseLandmarks[8].y * height
         );
-        console.log(domPos);
+        
+//        console.log("Earrings: " + domPos.x + " " + domPos.y);
         this.mesh.position.x = (domPos.x + this.prevDom.x)/2 + xOff;
         this.mesh.position.y = (domPos.y + this.prevDom.y)/2 + yOff;
         const trackLeftRot = mask.geometry.track(109 , 108 , 151 );
         const trackLeftPos = mask.geometry.track(177 , 137 , 132 );
         this.mesh.rotation.setFromRotationMatrix(trackLeftRot.rotation);
         var temp = this.mesh.rotation.z;
+        
         this.mesh.rotation.x += -90 / 180 * Math.PI;
-        this.mesh.rotation.z = -this.mesh.rotation.y;
+        this.mesh.rotation.z = this.mesh.rotation.y;
         this.mesh.rotation.y = temp;
         this.mesh.position.z = trackLeftPos.position.z + zOff;
         
-        var domPosLeft = domToWorld(poses.keypoints[5].position.x, poses.keypoints[5].position.y);
-        var domPosRight = domToWorld(poses.keypoints[6].position.x, poses.keypoints[6].position.y);
+        var domPosLeft = domToWorld(poses.poseLandmarks[11].x * width, poses.poseLandmarks[11].y * height);
+        var domPosRight = domToWorld(poses.poseLandmarks[12].x * width, poses.poseLandmarks[12].y * height);
         if(!adaptive){
             this.mesh.scale.x = 10 + scaleOff;
             this.mesh.scale.y = 10 + scaleOff;

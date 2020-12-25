@@ -36,8 +36,8 @@ export class NeckOccluder{
         };
         
 //        console.log({poses, xOff, yOff, zOff, width, height, camera});
-        var averagedX = (poses.keypoints[5].position.x + poses.keypoints[6].position.x)/2;
-        var averagedY = (poses.keypoints[5].position.y + poses.keypoints[6].position.y)/2;
+        var domPosLeft = domToWorld(poses.poseLandmarks[11].x * width, poses.poseLandmarks[11].y * height);
+        var domPosRight = domToWorld(poses.poseLandmarks[12].x * width, poses.poseLandmarks[12].y * height);
         var domPos = domToWorld(averagedX, averagedY);
         
         var noseX = poses.keypoints[0].position.x;

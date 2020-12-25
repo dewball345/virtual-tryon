@@ -23,10 +23,12 @@ export class Necklace{
         };
         
 
-        var domPosLeft = domToWorld(poses.keypoints[5].position.x, poses.keypoints[5].position.y);
-        var domPosRight = domToWorld(poses.keypoints[6].position.x, poses.keypoints[6].position.y);
+        var domPosLeft = domToWorld(poses.poseLandmarks[11].x * width, poses.poseLandmarks[11].y * height);
+        var domPosRight = domToWorld(poses.poseLandmarks[12].x * width, poses.poseLandmarks[12].y * height);
         var averagedX = (domPosLeft.x + domPosRight.x)/2;
         var averagedY = (domPosLeft.y + domPosRight.y)/2;
+        
+//        console.log("Necklace(Before dompos): " + averagedX + " " + averagedY)
 //        var domPos = domToWorld(averagedX, averagedY);
         
         //console.log(domPos.y + " " + this.mesh.position.y);
