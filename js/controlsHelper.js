@@ -46,7 +46,8 @@ export class ControlsHelper{
             xOff:0,
             yOff:-20,
             zOff:0,
-            scaleOff:0
+            scaleOff:0,
+            rotZ:0
         };
         
         this.shirt = {

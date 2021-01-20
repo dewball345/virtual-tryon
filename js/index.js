@@ -21,6 +21,7 @@ import {Ring} from './ring.js';
 import {Bangle} from './bangle.js';
 import {HeadLocket} from './headLocket.js';
 import {Facemask} from './facemask.js';
+import {RGBELoader} from "https://cdn.jsdelivr.net/npm/three@0.116.1/examples/jsm/loaders/RGBELoader.js"
 //import {MPPose} from './mppose.js'
 //import {MPHolistic} from './holistic.js';
 //import {MPFacemesh} from './mpfacemesh.js';
@@ -98,6 +99,8 @@ goggleFolder.add(settings.goggles, 'yOff')
     .name("Y offset(Goggles)").min(-200).max(400).step(1);
 goggleFolder.add(settings.goggles, 'scaleOff')
     .name("Scale(Goggles)").min(-10).max(20).step(1);
+goggleFolder.add(settings.goggles, 'rotZ')
+    .name("RotZ(Goggles)").min(-10).max(10).step(1);
 //Initialize Shirt Folder
 var shirtFolder = gui.addFolder("Shirts(Alpha)");
 shirtFolder.add(settings.shirt, 'enabled')
@@ -266,8 +269,10 @@ async function startVideo(){
 }
 function setWidths(){
     //sets width of canvas based on screen size
-    const w =Math.min(window.innerWidth, window.innerHeight)/1.5;
-    const h = Math.min(window.innerWidth, window.innerHeight)/1.5;
+//    const w =Math.min(window.innerWidth, window.innerHeight)/1.5;
+    const w = window.innerWidth/2.5;
+    const h = window.innerHeight/1.5;
+//    const h = Math.min(window.innerWidth, window.innerHeight)/1.5;
     container.width = w;
     container.height = h;
     container.style.width = w + "px";
@@ -326,11 +331,24 @@ function startLandmarkVideo() {
     window.requestAnimationFrame(getLandmarks)
 }
 function setLighting(){
-    const light = new THREE.PointLight(0xffffff, 2, 10);
-    light.position.set(0, 10, 0);
-    scene.add(light);
-    var hemiLight = new THREE.HemisphereLight( 0xffffbb, 0x080820, 2 );
-    scene.add( hemiLight );
+
+    //Stop undoing here
+    new RGBELoader()
+		.setDataType( THREE.UnsignedByteType )
+		.setPath( 'https://threejs.org/examples/textures/equirectangular/' )
+		.load( 'royal_esplanade_1k.hdr', function ( texture ) {
+
+		var envMap = pmremGenerator.fromEquirectangular( texture ).texture;
+
+		scene.background = envMap;
+		scene.environment = envMap;
+
+		texture.dispose();
+		pmremGenerator.dispose();
+    })
+    var pmremGenerator = new THREE.PMREMGenerator( renderer );
+	pmremGenerator.compileEquirectangularShader();
+
 }
 
 const FRAMES_PER_SECOND = 20;  // Valid values are 60,30,20,15,10...
@@ -378,7 +396,7 @@ async function startThreeJS(){
     scene.add(noseRing.mesh);
     var bottu = new Bottu(Bottu.create());
     scene.add(bottu.mesh)
-    var goggles = new Goggles(await Goggles.create("./obj/goggles.obj"));
+    var goggles = new Goggles(await Goggles.createGLTF("./obj/sungoggles/sungoggles.glb"));
     scene.add(goggles.mesh);
     var shirt = new Shirt(await Shirt.create("./obj/shirt.obj"));
     scene.add(shirt.mesh);
@@ -412,12 +430,12 @@ async function startThreeJS(){
 //        console.log(poseLandmarks);
         //if not stop then play animation
         if(!shouldStop){
-            if(time-lastFrameTime < FRAME_MIN_TIME){ //skip the frame if the call is too early
-                requestAnimationFrame(startThreeJSAnimation);
-                return; // return as there is nothing to do
-            }
-            
-            lastFrameTime = time;
+//            if(time-lastFrameTime < FRAME_MIN_TIME){ //skip the frame if the call is too early
+//                requestAnimationFrame(startThreeJSAnimation);
+//                return; // return as there is nothing to do
+//            }
+//            
+//            lastFrameTime = time;
 //            await setTimeout(() => {}, )
             window.requestAnimationFrame(startThreeJSAnimation);
         }
@@ -435,7 +453,9 @@ async function startThreeJS(){
 //        predict()
         var faceLandmarks = await modelHelper.predictFace(video);
 //        var poseLandmarks = await modelHelper.predictPose (video, canvas)/*holistic.poseLandmarks*/;
-        var handLandmarks = await modelHelper.predictHands(video);
+        if(settings.ring.enabled || settings.bangle.enabled){
+            var handLandmarks = await modelHelper.predictHands(video);
+        }
 //        console.log(poseLandmarks)
 //        var mpplandmarks = await modelHelper.predictMP(video);
 //        //TODO: Try initializing mediapipe here...
@@ -545,6 +565,7 @@ async function startThreeJS(){
                 zOff: settings.goggles.zOff,
                 xOff: settings.goggles.xOff,
                 yOff: settings.goggles.yOff,
+                rotZ: settings.goggles.rotZ,
                 scaleOff: settings.goggles.scaleOff
             });
         }

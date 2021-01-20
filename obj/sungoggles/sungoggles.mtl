@@ -1,0 +1,13 @@
+# Blender MTL File: 'sungoggles.blend'
+# Material Count: 1
+
+newmtl TextureAtlas_1001.001
+Ns 900.000000
+Ka 0.730337 0.730337 0.730337
+Kd 0.600000 0.600000 0.600000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd \\texture_1001.png
