@@ -3,25 +3,28 @@
 //import statements
 import {TRIANGULATION} from '../third-party/triangulation.js';
 import { FaceMeshFaceGeometry } from '../third-party/face.js';
-import {OBJLoader2} from 'https://threejsfundamentals.org/threejs/resources/threejs/r119/examples/jsm/loaders/OBJLoader2.js';
+//import {OBJLoader2} from 'https://threejsfundamentals.org/threejs/resources/threejs/r119/examples/jsm/loaders/OBJLoader2.js';
 import {OrbitControls} from "../third-party/OrbitControls.js";
-import {EarringLeft} from "./earringLeft.js";
-import {EarringRight} from "./earringRight.js";
-import {Necklace} from "./necklace.js";
-import {NoseRing} from "./nosering.js";
-import {Bottu} from "./bottu.js";
-import {Mask} from "./mask.js";
-import {Goggles} from "./goggles.js";
+import {EarringLeft} from "./jewelery/earringLeft.js";
+import {EarringRight} from "./jewelery/earringRight.js";
+import {Necklace} from "./jewelery/necklace.js";
+import {NoseRing} from "./jewelery/nosering.js";
+import {Bottu} from "./jewelery/bottu.js";
+import {Mask} from "./jewelery/mask.js";
+import {Goggles} from "./jewelery/goggles.js";
 //import {BangleRight} from "./bangleRight.js";
-import {Shirt} from "./shirt.js";
-import {ModelHelper} from "./modelHelper.js";
-import {ControlsHelper} from "./controlsHelper.js"
-import {NeckOccluder} from "./neckOccluder.js";
-import {Ring} from './ring.js';
-import {Bangle} from './bangle.js';
-import {HeadLocket} from './headLocket.js';
-import {Facemask} from './facemask.js';
-import {RGBELoader} from "https://cdn.jsdelivr.net/npm/three@0.116.1/examples/jsm/loaders/RGBELoader.js"
+import {Shirt} from "./jewelery/shirt.js";
+import {ModelHelper} from "./helpers/modelHelper.js";
+import {ControlsHelper} from "./helpers/controlsHelper.js"
+import {NeckOccluder} from "./jewelery/neckOccluder.js";
+import {Ring} from './jewelery/ring.js';
+import {Bangle} from './jewelery/bangle.js';
+import {HeadLocket} from './jewelery/headLocket.js';
+import {Facemask} from './jewelery/facemask.js';
+//import {RGBELoader} from "https://cdn.jsdelivr.net/npm/three@0.116.1/examples/jsm/loaders/RGBELoader.js"
+import {RGBELoader} from "../third-party/RGBELoader.js";
+import {Scene, OrthographicCamera, PerspectiveCamera, WebGLRenderer, sRGBEncoding, PointLight, HemisphereLight, UnsignedByteType, PMREMGenerator} from "../third-party/three.module.js";
+//STOP UNDOING HERE 1/26/2021
 //import {MPPose} from './mppose.js'
 //import {MPHolistic} from './holistic.js';
 //import {MPFacemesh} from './mpfacemesh.js';
@@ -101,6 +104,10 @@ goggleFolder.add(settings.goggles, 'scaleOff')
     .name("Scale(Goggles)").min(-10).max(20).step(1);
 goggleFolder.add(settings.goggles, 'rotZ')
     .name("RotZ(Goggles)").min(-10).max(10).step(1);
+goggleFolder.add(settings.goggles, 'rotX')
+    .name("RotX(Goggles)").min(-10).max(10).step(1);
+goggleFolder.add(settings.goggles, 'rotY')
+    .name("RotY(Goggles)").min(-10).max(10).step(1);
 //Initialize Shirt Folder
 var shirtFolder = gui.addFolder("Shirts(Alpha)");
 shirtFolder.add(settings.shirt, 'enabled')
@@ -214,10 +221,10 @@ pose.onResults((results) => {result = results; /*console.log(results)*/});
 //shouldStop checks whether or not to stop the program
 var shouldStop = true;
 //initialize scene(blank world)
-var scene = new THREE.Scene();
-//initialize variables for orthographic and perspective camera
-var ocamera = new THREE.OrthographicCamera(-canvas.width/2, canvas.width/2, -canvas.height/2, canvas.height/2, -1000, 1000);
-var pcamera = new THREE.PerspectiveCamera( 45, 1, 1, 1000 );
+var scene = new Scene();
+//initialize variables for orthographic and perspective camera(CHANGE TO -1000 undo here)
+var ocamera = new OrthographicCamera(-canvas.width/2, canvas.width/2, -canvas.height/2, canvas.height/2, -1000, 1000);
+var pcamera = new PerspectiveCamera( 45, 1, 1, 1000 );
 var debug = false;
 var controls = {};
 //uses orthographic or perspective camera based on debug variable
@@ -228,12 +235,15 @@ if(debug){
     camera = ocamera;
 }
 //initialize Renderer
-var renderer = new THREE.WebGLRenderer({alpha: true, antialias:true });
+var renderer = new WebGLRenderer({alpha: true, antialias:true });
 //render settings
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-renderer.outputEncoding = THREE.sRGBEncoding;
+//renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+// renderer.toneMapping = THREE.ACESFilmicToneMapping;
+// renderer.toneMappingExposure = 0.8;
+// renderer.outputEncoding = THREE.sRGBEncoding;
+renderer.outputEncoding = sRGBEncoding;
 //Loading elements
 var loader = document.getElementById("loader");
 var loadtext = document.getElementById("loading-text");
@@ -331,12 +341,16 @@ function startLandmarkVideo() {
     window.requestAnimationFrame(getLandmarks)
 }
 function setLighting(){
-
+    const light = new PointLight(0xffffff, 2, 10);
+    light.position.set(0, 10, 0);
+    scene.add(light);
+    var hemiLight = new HemisphereLight( 0xffffbb, 0x080820, 2 );
+    scene.add( hemiLight );
     //Stop undoing here
     new RGBELoader()
-		.setDataType( THREE.UnsignedByteType )
-		.setPath( 'https://threejs.org/examples/textures/equirectangular/' )
-		.load( 'royal_esplanade_1k.hdr', function ( texture ) {
+		.setDataType( UnsignedByteType )
+    //https://threejs.org/examples/textures/equirectangular/royal_esplanade_1k.hdr
+		.load( './assets/royal_esplanade_1k.hdr', function ( texture ) {
 
 		var envMap = pmremGenerator.fromEquirectangular( texture ).texture;
 
@@ -346,7 +360,7 @@ function setLighting(){
 		texture.dispose();
 		pmremGenerator.dispose();
     })
-    var pmremGenerator = new THREE.PMREMGenerator( renderer );
+    var pmremGenerator = new PMREMGenerator( renderer );
 	pmremGenerator.compileEquirectangularShader();
 
 }
@@ -374,42 +388,54 @@ async function startThreeJS(){
     shouldStop = false;
     //sets loader to loading
     loader.className = "loading-state"
-    loadtext.innerText = "Status: Adding components to scene"
+    loadtext.innerText = "Setting Lighting"
     setLighting();
     //adds earrings to scene
+    loadtext.innerText = "Adding Earrings"
     var leftEarring = new EarringLeft(await EarringLeft.create(
-        settings.earrings.earringType == "Option 1" ? './obj/untitled.obj' : './obj/secondearring.obj'));
+        settings.earrings.earringType == "Option 1" ? './obj/earrings/untitled.obj' : './obj/earrings/secondearring.obj'));
     scene.add(leftEarring.mesh);
     var rightEarring = new EarringRight(await EarringRight.create(
-        settings.earrings.earringType == "Option 1" ? './obj/untitled.obj' : './obj/secondearring.obj'));
+        settings.earrings.earringType == "Option 1" ? './obj/earrings/untitled.obj' : './obj/earrings/secondearring.obj'));
     scene.add(rightEarring.mesh); 
     //adds necklace to scene
+    loadtext.innerText = "Adding Necklace"
     if(settings.necklace.necklaceType == "Option 1"){
-        var necklace = new Necklace(await Necklace.create("./obj/necklace.obj"));
+        var necklace = new Necklace(await Necklace.create("./obj/necklace/necklace.obj"));
         scene.add(necklace.mesh);       
     } else {
-        var necklace = new Necklace(await Necklace.create("./obj/necklace2.obj"));
+        var necklace = new Necklace(await Necklace.create("./obj/necklace/necklace2.obj"));
         scene.add(necklace.mesh);
     }
     //adds other jewelry to scene
+    loadtext.innerText = "Adding Nosering"
     var noseRing = new NoseRing(NoseRing.create());
     scene.add(noseRing.mesh);
+    loadtext.innerText = "Adding Bottu"
     var bottu = new Bottu(Bottu.create());
     scene.add(bottu.mesh)
+    loadtext.innerText = "Adding Goggles"
     var goggles = new Goggles(await Goggles.createGLTF("./obj/sungoggles/sungoggles.glb"));
     scene.add(goggles.mesh);
-    var shirt = new Shirt(await Shirt.create("./obj/shirt.obj"));
+    loadtext.innerText = "Adding Shirt"
+    var shirt = new Shirt(await Shirt.create("./obj/shirt/shirt.obj"));
     scene.add(shirt.mesh);
+    loadtext.innerText = "Adding Occluder"
     var neck = new NeckOccluder(await NeckOccluder.create(video));
     scene.add(neck.mesh);
-    var ring = new Ring(await Ring.create("./obj/ring.obj"));
+    loadtext.innerText = "Adding Ring"
+    var ring = new Ring(await Ring.create("./obj/ring/ring.obj"));
     scene.add(ring.mesh);
-    var bangle = new Bangle(await Bangle.create("./obj/ring.obj"));
+    loadtext.innerText = "Adding Bangle"
+    var bangle = new Bangle(await Bangle.create("./obj/ring/ring.obj"));
     scene.add(bangle.mesh);
-    var facemask = new Facemask(await Facemask.create("./obj/facemesknew.obj"))
+    loadtext.innerText = "Adding Face mask"
+    var facemask = new Facemask(await Facemask.create("./obj/facemask/facemesknew.obj"))
     scene.add(facemask.mesh);
+    loadtext.innerText = "Adding Maang Tikka"
     var headLocket = new HeadLocket(HeadLocket.create());
     scene.add(headLocket.mesh);
+    loadtext.innerText = "Adding Face Occluder"
     var mask = new Mask(Mask.create({
         points: await modelHelper.predictFace(video), 
         camera: camera, 
@@ -494,7 +520,7 @@ async function startThreeJS(){
                 yOff: settings.earrings.left.yOff,
                 zOff: settings.earrings.left.zOff,
                 scaleOff:settings.earrings.left.scaleOff,
-                earringPath: settings.earrings.earringType == "Option 1" ? './obj/untitled.obj' : './obj/secondearring.obj',
+                earringPath: settings.earrings.earringType == "Option 1" ? './obj/earrings/untitled.obj' : './obj/earrings/secondearring.obj',
                 adaptive: true
             });
             await rightEarring.update({
@@ -507,7 +533,7 @@ async function startThreeJS(){
                 yOff: settings.earrings.right.yOff,
                 zOff: settings.earrings.right.zOff,
                 scaleOff:settings.earrings.right.scaleOff,
-                earringPath: settings.earrings.earringType == "Option 1" ? './obj/untitled.obj' : './obj/secondearring.obj',
+                earringPath: settings.earrings.earringType == "Option 1" ? './obj/earrings/untitled.obj' : './obj/earrings/secondearring.obj',
                 adaptive: true
             }) 
         }
@@ -551,7 +577,7 @@ async function startThreeJS(){
                 zOff: settings.necklace.zOff,
                 scaleOff: settings.necklace.scaleOff,
                 rotX: settings.necklace.rotation,
-                necklacePath: settings.necklace.necklaceType == "Option 1" ? './obj/necklace2.obj' : './obj/necklace.obj',
+                necklacePath: settings.necklace.necklaceType == "Option 1" ? './obj/necklace/necklace2.obj' : './obj/necklace/necklace.obj',
                 adaptive: true,
             });
         }
@@ -566,6 +592,8 @@ async function startThreeJS(){
                 xOff: settings.goggles.xOff,
                 yOff: settings.goggles.yOff,
                 rotZ: settings.goggles.rotZ,
+                rotX: settings.goggles.rotX,
+                rotY: settings.goggles.rotY,
                 scaleOff: settings.goggles.scaleOff
             });
         }
@@ -584,7 +612,7 @@ async function startThreeJS(){
                 height: canvas.height, 
                 scaleOff: settings.shirt.scaleOff, 
                 camera: camera, 
-                shirtPath: "./obj/shirt.obj"
+                shirtPath: "./obj/shirt/shirt.obj"
             });
         }
         //HS&U neck

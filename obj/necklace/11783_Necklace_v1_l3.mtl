@@ -1,0 +1,61 @@
+# 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
+# File Created: 22.11.2011 15:42:28
+
+newmtl Necklace_beruza
+	Ns 50.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 1.0000 1.0000 1.0000
+	Kd 1.0000 1.0000 1.0000
+	Ks 0.5400 0.5400 0.5400
+	Ke 0.0000 0.0000 0.0000
+	map_Ka 11783_Necklace_beruza_diff.jpg
+	map_Kd 11783_Necklace_beruza_diff.jpg
+	map_Ks 11783_Necklace_beruza_spec.jpg
+
+newmtl Necklace_biser
+	Ns 24.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 1.0000 1.0000 1.0000
+	Kd 1.0000 1.0000 1.0000
+	Ks 0.5400 0.5400 0.5400
+	Ke 0.0000 0.0000 0.0000
+	map_Ka 11783_Necklace_beruza_diff.jpg
+	map_Kd 11783_Necklace_beruza_diff.jpg
+	map_Ks 11783_Necklace_beruza_spec.jpg
+	map_bump 11783_Necklace_beruza_bump.jpg
+	bump 11783_Necklace_beruza_bump.jpg
+
+newmtl Necklace_metal
+	Ns 45.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.8039 0.5216 0.2745
+	Kd 0.8039 0.5216 0.2745
+	Ks 0.5400 0.5400 0.5400
+	Ke 0.0000 0.0000 0.0000
+
+newmtl Necklace_metal_sphere
+	Ns 30.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 1.0000 1.0000 1.0000
+	Kd 1.0000 1.0000 1.0000
+	Ks 0.5400 0.5400 0.5400
+	Ke 0.0000 0.0000 0.0000
+	map_Ka 11783_Necklace_metal_diff.jpg
+	map_Kd 11783_Necklace_metal_diff.jpg
+	map_Ks 11783_Necklace_metal_spec.jpg
