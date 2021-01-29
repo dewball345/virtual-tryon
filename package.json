@@ -1,0 +1,24 @@
+{
+  "name": "virtual-tryon",
+  "version": "1.0.0",
+  "description": "Simple virtual tryon thing\r stuff in md folder",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dewball345/virtual-tryon.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dewball345/virtual-tryon/issues"
+  },
+  "homepage": "https://github.com/dewball345/virtual-tryon#readme",
+  "devDependencies": {
+    "webpack": "^5.18.0",
+    "webpack-cli": "^4.4.0"
+  }
+}
