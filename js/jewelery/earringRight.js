@@ -1,5 +1,6 @@
 import {OBJLoader} from '../../third-party/OBJLoader.js';
 import {DistanceHelper} from "../helpers/distanceHelper.js";
+import {MeshStandardMaterial, Vector3} from "../../third-party/three.module.js";
 
 export class EarringRight{
     constructor(mesh){
@@ -12,7 +13,7 @@ export class EarringRight{
             const objLoader = new OBJLoader();
             var loader = objLoader.load(objPath, (root) => {
                 //console.log("FUNCTION: " + objLoader.load);
-                var material = new THREE.MeshStandardMaterial({
+                var material = new MeshStandardMaterial({
                       color: 0xD4AF37,
                       roughness: 0.4,
                       metalness: 0.1,
@@ -30,7 +31,7 @@ export class EarringRight{
             });
         });
     }
-    async update({poses, mask, xOff, yOff, zOff, width, height, camera, scaleOff, earringPath, adaptive}){
+    async update({poses, mask, xOff, yOff, zOff, width, height, camera, scaleOff, earringPath, adaptive, rotX, rotY, rotZ}){
         if(earringPath !== this.path){
             this.path = earringPath;
             //console.log((await EarringRight.create(earringPath)).children);
@@ -39,7 +40,7 @@ export class EarringRight{
             
         }
         const domToWorld = function(x, y) {
-          let newPosition = new THREE.Vector3();
+          let newPosition = new Vector3();
           let normalizedX = (x / width) * 2 - 1;
           let normalizedY = ((y - height) / height) * 2 + 1;
           newPosition.set(normalizedX, -normalizedY, 0);
@@ -65,14 +66,15 @@ export class EarringRight{
         
         this.mesh.rotation.setFromRotationMatrix(trackLeftRot.rotation);
         
-//        var temp = this.mesh.rotation.z;
-        this.mesh.rotation.x += -90 / 180 * Math.PI;
-//        this.mesh.rotation.z = this.mesh.rotation.y;
-//        this.mesh.rotation.y = temp;
+        var temp = this.mesh.rotation.z;
+        this.mesh.rotation.x += rotX / 180 * Math.PI;
+        this.mesh.rotation.z =  -this.mesh.rotation.y + rotZ/180*Math.PI;
+        this.mesh.rotation.y = -temp + rotY/180*Math.PI;
         this.mesh.position.z = trackLeftPos.position.z + zOff;
         
         var domPosLeft = domToWorld(poses.poseLandmarks[11].x * width, poses.poseLandmarks[11].y * height);
         var domPosRight = domToWorld(poses.poseLandmarks[12].x * width, poses.poseLandmarks[12].y * height);
+        
         if(!adaptive){
             this.mesh.scale.x = 10 + scaleOff;
             this.mesh.scale.y = 10 + scaleOff;

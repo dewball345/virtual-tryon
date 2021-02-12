@@ -1,3 +1,5 @@
+import {SphereGeometry, MeshStandardMaterial, Mesh} from "../../third-party/three.module.js";
+
 export class NoseRing{
     constructor(mesh){
         this.mesh = mesh
@@ -17,15 +19,15 @@ export class NoseRing{
             this.mesh.position.z += zOff;
     }
     static create() {
-            var geometry = new THREE.SphereGeometry();
-            var material = new THREE.MeshStandardMaterial({
+            var geometry = new SphereGeometry();
+            var material = new MeshStandardMaterial({
               color: 0xaaaa00,
               roughness: 0.4,
               metalness: 0.1,
               transparent: true,
             });
 
-            var sphere = new THREE.Mesh(geometry, material);
+            var sphere = new Mesh(geometry, material);
             sphere.scale.setScalar(5);
             sphere.name = "nosering";
 

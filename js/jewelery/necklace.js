@@ -1,5 +1,6 @@
 import {OBJLoader} from '../../third-party/OBJLoader.js';
 import {DistanceHelper} from "../helpers/distanceHelper.js";
+import {MeshStandardMaterial, Vector3} from "../../third-party/three.module.js";
 
 export class Necklace{
     constructor(mesh){
@@ -14,7 +15,7 @@ export class Necklace{
 //            console.log("Howdyj");
         }
         const domToWorld = function(x, y) {
-          let newPosition = new THREE.Vector3();
+          let newPosition = new Vector3();
           let normalizedX = (x / width) * 2 - 1;
           let normalizedY = ((y - height) / height) * 2 + 1;
           newPosition.set(normalizedX, -normalizedY, 0);
@@ -74,7 +75,7 @@ export class Necklace{
             const objLoader = new OBJLoader();
             var loader = objLoader.load(objPath, (root) => {
                 //console.log("FUNCTION: " + objLoader.load);
-                var material = new THREE.MeshStandardMaterial({
+                var material = new MeshStandardMaterial({
                       color: 0xD4AF37,
                       roughness: 0.2,
                       metalness: 0.7,

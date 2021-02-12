@@ -7,13 +7,19 @@ export class ControlsHelper{
                 xOff: 0,
                 yOff:-40,
                 zOff:0,
-                scaleOff:0
+                scaleOff:0,
+                xRot: -90,
+                yRot: 0,
+                zRot: 0
             },
             right: {
                 xOff:0,
                 yOff:-40,
                 zOff:0,
-                scaleOff:0
+                scaleOff:0,
+                xRot: -90,
+                yRot: 0,
+                zRot: 0
             }
         };
         
@@ -41,15 +47,26 @@ export class ControlsHelper{
             zOff:0
         };
         
+        this.hat = {
+            enabled:false,
+            xOff:4,
+            yOff:20,
+            zOff:19,
+            scaleOff:-5,
+            rotZ:-90,
+            rotX:20,
+            rotY:-7
+        };
+        
         this.goggles = {
             enabled:false,
-            xOff:0,
-            yOff:-20,
+            xOff:-6,
+            yOff:-47,
             zOff:0,
-            scaleOff:0,
+            scaleOff:-2,
             rotZ:90,
-            rotX:0,
-            rotY:0
+            rotX:-4,
+            rotY:-7
         };
         
         this.shirt = {
@@ -97,12 +114,12 @@ export class ControlsHelper{
         
         this.facemask = {
             enabled:false,
-            xOff:0,
-            yOff:-30,
+            xOff:10,
+            yOff:-50,
             zOff:30,
-            scaleOff:-5,
-            xRot:0,
-            yRot:8,
+            scaleOff:-6,
+            xRot:10,
+            yRot:7,
             zRot:0
         }
     }

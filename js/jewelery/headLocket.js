@@ -1,18 +1,19 @@
 import {OBJLoader} from '../../third-party/OBJLoader.js';
+import {MeshStandardMaterial, BoxGeometry, Mesh} from "../../third-party/three.module.js";
 
 export class HeadLocket{
     constructor(mesh){
         this.mesh = mesh;
     }
     static create() {
-        var geometry = new THREE.BoxGeometry();
-        var material = new THREE.MeshStandardMaterial({
+        var geometry = new BoxGeometry();
+        var material = new MeshStandardMaterial({
           color: 0xdddd33,
           roughness: 0.4,
           metalness: 0.1,
           transparent: true,
         });
-        var sphere = new THREE.Mesh(geometry, material);
+        var sphere = new Mesh(geometry, material);
         sphere.scale.setScalar(5);
         sphere.name = "bottu";
         sphere.castShadow = true; 

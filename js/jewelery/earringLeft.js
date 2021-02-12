@@ -1,7 +1,7 @@
 //import {OBJLoader2} from 'https://threejsfundamentals.org/threejs/resources/threejs/r119/examples/jsm/loaders/OBJLoader2.js';
 import {OBJLoader} from '../../third-party/OBJLoader.js';
 import {DistanceHelper} from "../helpers/distanceHelper.js";
-
+import {MeshStandardMaterial, Vector3} from "../../third-party/three.module.js";
 
 export class EarringLeft{
     constructor(mesh){
@@ -9,7 +9,7 @@ export class EarringLeft{
         this.path = "";
         this.prevDom = {x: 0, y:0};
     }
-    async update({poses, mask, xOff, yOff, zOff, width, height, scaleOff, camera, earringPath, adaptive}){
+    async update({poses, mask, xOff, yOff, zOff, width, height, scaleOff, camera, earringPath, adaptive, rotX, rotY, rotZ}){
         if(earringPath !== this.path){
             this.path = earringPath;
             this.mesh.children[0].geometry = (await EarringLeft.create(earringPath)).children[0].geometry
@@ -19,7 +19,7 @@ export class EarringLeft{
 //        console.log("scaled: " + poses.poseLandmarks[8].x * 500)
         
         const domToWorld = function(x, y) {
-          let newPosition = new THREE.Vector3();
+          let newPosition = new Vector3();
           let normalizedX = (x / width) * 2 - 1;
           let normalizedY = ((y - height) / height) * 2 + 1;
           newPosition.set(normalizedX, -normalizedY, 0);
@@ -46,9 +46,9 @@ export class EarringLeft{
         this.mesh.rotation.setFromRotationMatrix(trackLeftRot.rotation);
         var temp = this.mesh.rotation.z;
         
-        this.mesh.rotation.x += -90 / 180 * Math.PI;
-        this.mesh.rotation.z = this.mesh.rotation.y;
-        this.mesh.rotation.y = temp;
+        this.mesh.rotation.x += rotX / 180 * Math.PI;
+        this.mesh.rotation.z = this.mesh.rotation.y + rotZ/180 * Math.PI;
+        this.mesh.rotation.y = -temp + rotY/180 * Math.PI;
         this.mesh.position.z = trackLeftPos.position.z + zOff;
         
         var domPosLeft = domToWorld(poses.poseLandmarks[11].x * width, poses.poseLandmarks[11].y * height);
@@ -74,7 +74,7 @@ export class EarringLeft{
             const objLoader = new OBJLoader();
             var loader = objLoader.load(objPath, (root) => {
                 //console.log("FUNCTION: " + objLoader.load);
-                var material = new THREE.MeshStandardMaterial({
+                var material = new MeshStandardMaterial({
                       color: 0xD4AF37,
                       roughness: 0.4,
                       metalness: 0.1,

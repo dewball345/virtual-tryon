@@ -1,4 +1,5 @@
 import { FaceMeshFaceGeometry } from '../../third-party/face.js';
+import {MeshBasicMaterial, VideoTexture, sRGBEncoding, Mesh} from "../../third-party/three.module.js";
 
 export class Mask{
     constructor(mesh){
@@ -37,11 +38,11 @@ export class Mask{
 //          transparent: true,
 ////          opacity:1
 //        });
-        var material = new THREE.MeshBasicMaterial()
-        const videoTexture = new THREE.VideoTexture(video);
-        videoTexture.encoding = THREE.sRGBEncoding;
+        var material = new MeshBasicMaterial()
+        const videoTexture = new VideoTexture(video);
+        videoTexture.encoding = sRGBEncoding;
         material.map = videoTexture;
-        const mask = new THREE.Mesh(faceGeometry, material);
+        const mask = new Mesh(faceGeometry, material);
         mask.receiveShadow = mask.castShadow = true;
 //        console.log("Called!")
         return mask;
