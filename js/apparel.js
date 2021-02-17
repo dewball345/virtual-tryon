@@ -1,4 +1,4 @@
-{
+const apparel = {
     "controls": [
         "earring left", 
         "earring right", 
@@ -41,7 +41,8 @@
                 "earringPath": "../obj/earrings/earrings.obj", 
                 "adaptive": true, 
                 "rotX": "controls",
-                "rotY": , "rotZ"
+                "rotY": "controls",
+                "rotZ": "controls"
             }
         },
             

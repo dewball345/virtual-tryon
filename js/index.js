@@ -265,7 +265,7 @@ if(debug){
     camera = ocamera;
 }
 //initialize Renderer
-var renderer = new WebGLRenderer({alpha: true, antialias:true });
+var renderer = new WebGLRenderer({alpha: true, antialias:true,preserveDrawingBuffer:true});
 //render settings
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.shadowMap.enabled = true;
@@ -278,14 +278,14 @@ renderer.outputEncoding = sRGBEncoding;
 var loader = document.getElementById("loader");
 var loadtext = document.getElementById("loading-text");
 //Width and height variable(possible for resizing idk)
-let width = 0;
-let height = 0;
+let photolist = document.getElementById("photolist");
 //playedOnce variable to check how many times video.addeventlistener(playing)
 //executed. Sometimes it may run twice but idk really i may not need it
 var playedOnce = false;
 //Checks to see if I can start program
 var canStart = false;
 //adds renderer to html
+renderer.domElement.id = "rendererCanvas";
 container.appendChild(renderer.domElement)
 //initialize OrbitControls(to look around scene)
 var orbitControls = new OrbitControls(camera, renderer.domElement);
@@ -312,6 +312,12 @@ function setWidths(){
 //    const w =Math.min(window.innerWidth, window.innerHeight)/1.5;
     const w = window.innerWidth/2.5;
     const h = window.innerHeight/1.5;
+
+    let ps = document.getElementById("photosection");
+
+    ps.style.width = w/2 + 50 + "px";
+    photolist.style.height = h + "px";
+    photolist.style.width = w/2 + 50 + "px";
 //    const h = Math.min(window.innerWidth, window.innerHeight)/1.5;
     container.width = w;
     container.height = h;
@@ -480,7 +486,7 @@ async function startThreeJS(){
     camera.position.z = 5;
     //sets loader to dormant(inactive)
     loader.className = "dormant-state";
-    loadtext.innerText = "Status: Try jewelery on(Wait until after choppy framerate)!";
+    loadtext.innerText = "Status: Try jewelery on when you see FPS counter!";
     var startThreeJSAnimation = async function (time){
         //gets landmarks
         //move below
@@ -794,7 +800,7 @@ async function startThreeJS(){
         renderer.render( scene, camera );
         
         let t1 = performance.now()
-        console.log((t1-t0)/1000)
+        // console.log((t1-t0)/1000)
         let fps = document.getElementById("FPS")
         fps.innerText = 1/((t1-t0)/1000) + "FPS"
 
@@ -820,12 +826,29 @@ async function resetOrbit(){
     await startThreeJS();
     console.log("RESETTED")
 }
+
+function takePicture(){
+    console.log("picture");
+    let combined = document.createElement("CANVAS");
+    combined.width = canvas.width/2;
+    combined.height = canvas.height/2;
+    let combinedCtx = combined.getContext('2d');
+    combinedCtx.drawImage(canvas, 0, 0, canvas.width/2, canvas.height/2);
+    combinedCtx.drawImage(renderer.domElement, 0, 0, canvas.width/2, canvas.height/2)
+    // canvas.scale(0.5, 0.5)
+    let canvasimg = combined.toDataURL("image/png");
+    photolist.innerHTML += '<img class="borderimage" src="'+canvasimg+'"/>'  
+
+}
 //var landmarkButton = document.getElementById("landmarkButton");
 //gets ids of buttons for each
 var stopvideo = document.getElementById("stopVideo");
 var threeJS = document.getElementById("threeJS");
 var reset = document.getElementById("resetOrbit");
+var takepic = document.getElementById("takePic");
+
 //wires functions to buttons
 stopvideo.addEventListener('click', stopVideo);
 threeJS.addEventListener('click', startThreeJS);
 reset.addEventListener('click', resetOrbit);
+takepic.addEventListener('click', takePicture);
