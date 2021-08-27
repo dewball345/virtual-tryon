@@ -26,7 +26,7 @@ const apparel = {
                 "earringPath": "../obj/earrings/earrings.obj", 
                 "adaptive": true, 
                 "rotX": "controls",
-                "rotY": , "rotZ"
+                "rotY": "rotZ"
             }
         },
         "earring right": {

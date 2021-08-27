@@ -1,7 +1,7 @@
 //necessary import statements
-import {Goggles} from './goggles.js';
-import {Mask} from './mask.js';
-import {ModelHelper} from './modelHelper.js'
+import {Goggles} from './jewelery/goggles.js';
+import {Mask} from './jewelery/mask.js';
+import {ModelHelper} from './helpers/modelHelper.js'
 
 //access html elements
 var video = document.getElementById("video");
@@ -47,18 +47,25 @@ function setLighting(){
 //important part- main content
 async function startThreeJs(){
     //gets points for mask
-    var facepoints = await modelHelper.predictFace(placeholder);
+    // var facepoints = await modelHelper.predictFace(placeholder);
     
     //creates and adds goggles to scene
-    var goggles = new Goggles(await Goggles.create('./obj/goggles.obj'));
+    var goggles = new Goggles(await Goggles.createGLTF("./obj/sungoggles/sungoggles.glb"));
     scene.add(goggles.mesh);
     
     //creates and adds mask to scene
-    var mask = new Mask(await Mask.create({
-        points: facepoints,
-        camera: camera,
-        width: canvas.width,
-        height: canvas.height,
+    // var mask = new Mask(await Mask.create({
+    //     points: facepoints,
+    //     camera: camera,
+    //     width: canvas.width,
+    //     height: canvas.height,
+    //     video: video
+    // }));
+    var mask = new Mask(Mask.create({
+        points: await modelHelper.predictFace(video), 
+        camera: camera, 
+        width: 100, 
+        height: 100, 
         video: video
     }));
     scene.add(mask.mesh);

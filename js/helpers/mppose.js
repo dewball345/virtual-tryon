@@ -1,7 +1,7 @@
 export class MPPose{
     constructor(){
         this.pose = new Pose({locateFile: (file) => {
-          return `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`;
+          return `https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.8.4/${file}`;
         }});
         this.pose.setOptions({
           upperBodyOnly: true,

@@ -1,6 +1,7 @@
-const foomppose = new Pose({locateFile: (file) => {
-  return `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`;
-}});
+// const foomppose = new Pose({locateFile: (file) => {
+//   console.log(file)
+//   return `https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.3.1620144886/${file}`;
+// }});
 export class ModelHelper{
     constructor(){
         this.facemodel;

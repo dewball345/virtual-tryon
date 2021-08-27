@@ -23,232 +23,27 @@ import {Facemask} from './jewelery/facemask.js';
 import {Hat} from './jewelery/hat.js';
 //import {RGBELoader} from "https://cdn.jsdelivr.net/npm/three@0.116.1/examples/jsm/loaders/RGBELoader.js"
 import {RGBELoader} from "../third-party/RGBELoader.js";
-import {Scene, OrthographicCamera, PerspectiveCamera, WebGLRenderer, sRGBEncoding, PointLight, HemisphereLight, UnsignedByteType, PMREMGenerator} from "../third-party/three.module.js";
-//STOP UNDOING HERE 1/26/2021
-//import {MPPose} from './mppose.js'
-//import {MPHolistic} from './holistic.js';
-//import {MPFacemesh} from './mpfacemesh.js';
+import {GuiHelper} from "./helpers/guiHelper.js";
+import {
+    Scene, 
+    OrthographicCamera, 
+    PerspectiveCamera, 
+    WebGLRenderer, 
+    sRGBEncoding, 
+    PointLight, 
+    HemisphereLight, 
+    UnsignedByteType, 
+    PMREMGenerator
+} from "../third-party/three.module.js";
 
-//initialize dat.GUI(Interface for controls)
 var gui = new dat.GUI();
-//initialize controlshelper(map with different settings to customize with)
 var settings = new ControlsHelper();
-
-//Initialize Earring Folder
-var earringFolder = gui.addFolder("Earrings(Pre-Release/Release)");
-earringFolder.add(settings.earrings, 'enabled')
-    .name("Include Earrings").listen();
-earringFolder.add(settings.earrings.left, 'zOff')
-    .name("Z offset(Earring: left)").min(-1000).max(1000).step(1);
-earringFolder.add(settings.earrings.left, 'xOff')
-    .name("X offset(Earring: left)").min(-200).max(200).step(1);
-earringFolder.add(settings.earrings.left, 'yOff')
-    .name("Y offset(Earring: left)").min(-200).max(200).step(1);
-earringFolder.add(settings.earrings.left, 'scaleOff')
-    .name("Scale(Earring: Left)").min(-5).max(10).step(1);
-earringFolder.add(settings.earrings.left, 'zRot')
-    .name("Z rot(Earring: left)").min(-1000).max(1000).step(1);
-earringFolder.add(settings.earrings.left, 'xRot')
-    .name("X rot(Earring: left)").min(-200).max(200).step(1);
-earringFolder.add(settings.earrings.left, 'yRot')
-    .name("Y rot(Earring: left)").min(-200).max(200).step(1);
-earringFolder.add(settings.earrings.right, 'scaleOff')
-    .name("Scale(Earring: Right)").min(-5).max(10).step(1);
-earringFolder.add(settings.earrings.right, 'zOff')
-    .name("Z offset(Earring: right)").min(-1000).max(1000).step(10);
-earringFolder.add(settings.earrings.right, 'xOff')
-    .name("X offset(Earring: right)").min(-200).max(200).step(1);
-earringFolder.add(settings.earrings.right, 'yOff')
-    .name("Y offset(Earring: right)").min(-200).max(200).step(1);
-earringFolder.add(settings.earrings.right, 'zRot')
-    .name("Z rot(Earring: right)").min(-1000).max(1000).step(1);
-earringFolder.add(settings.earrings.right, 'xRot')
-    .name("X rot(Earring: right)").min(-200).max(200).step(1);
-earringFolder.add(settings.earrings.right, 'yRot')
-    .name("Y rot(Earring: right)").min(-200).max(200).step(1);
-earringFolder.add(settings.earrings, 'earringType', [ 'Option 1', 'Option 2'] );
-//Initialize Necklace Folder
-var necklaceFolder = gui.addFolder("Necklace(Pre-Release/Release)");
-necklaceFolder.add(settings.necklace, 'enabled')
-    .name("Include Necklace").listen();
-necklaceFolder.add(settings.necklace, 'zOff')
-    .name("Z offset(Necklace)").min(-1000).max(1000).step(1);
-necklaceFolder.add(settings.necklace, 'xOff')
-    .name("X offset(Necklace)").min(-200).max(200).step(1);
-necklaceFolder.add(settings.necklace, 'yOff')
-    .name("Y offset(Necklace)").min(-200).max(400).step(1);
-necklaceFolder.add(settings.necklace, 'rotation')
-    .name("Rotation X(Necklace)").min(0).max(2 * Math.PI)
-necklaceFolder.add(settings.necklace, 'scaleOff')
-    .name("Scale(Necklace)").min(-10).max(20).step(1);
-necklaceFolder.add(settings.necklace, 'necklaceType', [ 'Option 1', 'Option 2'] );
-//Initialize bottu folder
-var bottuFolder = gui.addFolder("Bottu(Release)");
-bottuFolder.add(settings.bottu, 'enabled')
-    .name("Include Bottu").listen();
-bottuFolder.add(settings.bottu, 'zOff')
-    .name("Z offset(Bottu)").min(-1000).max(1000).step(1);
-bottuFolder.add(settings.bottu, 'xOff')
-    .name("X offset(Bottu)").min(-200).max(200).step(1);
-bottuFolder.add(settings.bottu, 'yOff')
-    .name("Y offset(Bottu)").min(-200).max(200).step(1);
-//Initialize Nose Ring Folder
-var noseRingFolder = gui.addFolder("Nose Ring(Release)");
-noseRingFolder.add(settings.nosering, 'enabled')
-    .name("Include Nose Ring").listen();
-noseRingFolder.add(settings.nosering, 'zOff')
-    .name("Z offset(Nose Ring)").min(-1000).max(1000).step(1);
-noseRingFolder.add(settings.nosering, 'xOff')
-    .name("X offset(Nose Ring)").min(-200).max(200).step(1);
-noseRingFolder.add(settings.nosering, 'yOff')
-    .name("Y offset(Nose Ring)").min(-200).max(200).step(1);
-//Initialize Goggle Folder
-var goggleFolder = gui.addFolder("Goggles(Release)");
-goggleFolder.add(settings.goggles, 'enabled')
-    .name("Include Goggles").listen();
-goggleFolder.add(settings.goggles, 'zOff')
-    .name("Z offset(Goggles)").min(-1000).max(1000).step(1);
-goggleFolder.add(settings.goggles, 'xOff')
-    .name("X offset(Goggles)").min(-200).max(200).step(1);
-goggleFolder.add(settings.goggles, 'yOff')
-    .name("Y offset(Goggles)").min(-200).max(400).step(1);
-goggleFolder.add(settings.goggles, 'scaleOff')
-    .name("Scale(Goggles)").min(-10).max(20).step(1);
-goggleFolder.add(settings.goggles, 'rotZ')
-    .name("RotZ(Goggles)").min(-100).max(100).step(1);
-goggleFolder.add(settings.goggles, 'rotX')
-    .name("RotX(Goggles)").min(-100).max(100).step(1);
-goggleFolder.add(settings.goggles, 'rotY')
-    .name("RotY(Goggles)").min(-100).max(100).step(1);
-//Initialize Hat Folder
-var hatFolder = gui.addFolder("hat(Release)");
-hatFolder.add(settings.hat, 'enabled')
-    .name("Include hat").listen();
-hatFolder.add(settings.hat, 'zOff')
-    .name("Z offset(hat)").min(-1000).max(1000).step(1);
-hatFolder.add(settings.hat, 'xOff')
-    .name("X offset(hat)").min(-200).max(200).step(1);
-hatFolder.add(settings.hat, 'yOff')
-    .name("Y offset(hat)").min(-200).max(400).step(1);
-hatFolder.add(settings.hat, 'scaleOff')
-    .name("Scale(hat)").min(-10).max(20).step(1);
-hatFolder.add(settings.hat, 'rotZ')
-    .name("RotZ(hat)").min(-100).max(100).step(1);
-hatFolder.add(settings.hat, 'rotX')
-    .name("RotX(hat)").min(-100).max(100).step(1);
-hatFolder.add(settings.hat, 'rotY')
-    .name("RotY(hat)").min(-100).max(100).step(1);
-//Initialize Shirt Folder
-var shirtFolder = gui.addFolder("Shirts(Alpha)");
-shirtFolder.add(settings.shirt, 'enabled')
-    .name("Include Shirt").listen();
-shirtFolder.add(settings.shirt, 'zOff')
-    .name("Z offset(Shirt)").min(-1000).max(1000).step(1);
-shirtFolder.add(settings.shirt, 'xOff')
-    .name("X offset(Shirt)").min(-500).max(500).step(1);
-shirtFolder.add(settings.shirt, 'yOff')
-    .name("Y offset(Shirt)").min(-500).max(400).step(1);
-shirtFolder.add(settings.shirt, 'scaleOff')
-    .name("Scale(Shirt)").min(-10).max(40).step(1);
-//Initialize Neck Occluder Folder
-var neckOccluderFolder = gui.addFolder("Neck Occluder(Alpha)");
-neckOccluderFolder.add(settings.neck, 'enabled')
-    .name("Include Neck Occluder").listen();
-neckOccluderFolder.add(settings.neck, 'zOff')
-    .name("Z offset(Neck)").min(-1000).max(1000).step(1);
-neckOccluderFolder.add(settings.neck, 'xOff')
-    .name("X offset(Neck)").min(-500).max(500).step(1);
-neckOccluderFolder.add(settings.neck, 'yOff')
-    .name("Y offset(Neck)").min(-500).max(400).step(1);
-neckOccluderFolder.add(settings.neck, 'scaleOff')
-    .name("Scale(Neck)").min(-10).max(80).step(1);
-//Initialize Ring Folder
-var ringFolder = gui.addFolder("Ring(Alpha)");
-ringFolder.add(settings.ring, 'enabled')
-    .name("Include Ring").listen();
-ringFolder.add(settings.ring, 'zOff')
-    .name("Z offset(Ring)").min(-1000).max(1000).step(1);
-ringFolder.add(settings.ring, 'xOff')
-    .name("X offset(Ring)").min(-500).max(500).step(1);
-ringFolder.add(settings.ring, 'yOff')
-    .name("Y offset(Ring)").min(-500).max(400).step(1);
-ringFolder.add(settings.ring, 'scaleOff')
-    .name("Scale(Ring)").min(-40).max(40).step(1);
-//Initialize Bangle Folder
-var bangleFolder = gui.addFolder("Bangle(Alpha)");
-bangleFolder.add(settings.bangle, 'enabled')
-    .name("Include Bangle").listen();
-bangleFolder.add(settings.bangle, 'zOff')
-    .name("Z offset(Bangle)").min(-1000).max(1000).step(1);
-bangleFolder.add(settings.bangle, 'xOff')
-    .name("X offset(Bangle)").min(-500).max(500).step(1);
-bangleFolder.add(settings.bangle, 'yOff')
-    .name("Y offset(Bangle)").min(-500).max(400).step(1);
-bangleFolder.add(settings.bangle, 'scaleOff')
-    .name("Scale(Bangle)").min(-80).max(40).step(1);
-//Initialize Head Locket Folder
-var headLocketFolder = gui.addFolder("Head Locket(Alpha)");
-headLocketFolder.add(settings.headlocket, 'enabled')
-    .name("Include Head Locket").listen();
-headLocketFolder.add(settings.headlocket, 'zOff')
-    .name("Z offset(Head Locket)").min(-1000).max(1000).step(1);
-headLocketFolder.add(settings.headlocket, 'xOff')
-    .name("X offset(Head Locket)").min(-500).max(500).step(1);
-headLocketFolder.add(settings.headlocket, 'yOff')
-    .name("Y offset(Head Locket)").min(-500).max(400).step(1);
-headLocketFolder.add(settings.headlocket, 'xRot')
-    .name("Xrot Offset(HeadLocket)").min(-1000).max(1000).step(1);
-headLocketFolder.add(settings.headlocket, 'yRot')
-    .name("Yrot Offset(HeadLocket)").min(-500).max(500).step(1);
-headLocketFolder.add(settings.headlocket, 'zRot')
-    .name("Zrot Offset(HeadLocket)").min(-500).max(400).step(1);
-headLocketFolder.add(settings.headlocket, 'scaleOff')
-    .name("Scale(Head Locket)").min(-80).max(40).step(1);
-//Initialize Face Mask Folder
-var faceMaskFolder = gui.addFolder("Face Mask(Alpha)")
-faceMaskFolder.add(settings.facemask, 'enabled')
-    .name("Include Face Mask").listen();
-faceMaskFolder.add(settings.facemask, 'zOff')
-    .name("Z offset(Face Mask)").min(-1000).max(1000).step(1);
-faceMaskFolder.add(settings.facemask, 'xOff')
-    .name("X offset(Face Mask)").min(-500).max(500).step(1);
-faceMaskFolder.add(settings.facemask, 'yOff')
-    .name("Y offset(Face Mask)").min(-500).max(400).step(1);
-faceMaskFolder.add(settings.facemask, 'xRot')
-    .name("Xrot Offset(Face Mask)").min(-1000).max(1000).step(1);
-faceMaskFolder.add(settings.facemask, 'yRot')
-    .name("Yrot Offset(Face Mask)").min(-500).max(500).step(1);
-faceMaskFolder.add(settings.facemask, 'zRot')
-    .name("Zrot Offset(Face Mask)").min(-500).max(400).step(1);
-faceMaskFolder.add(settings.facemask, 'scaleOff')
-    .name("Scale(Face Mask)").min(-80).max(40).step(1);
-
-//access video element
+new GuiHelper(gui, settings)
 var video = document.getElementById("video");
-//access canvas element
 var canvas = document.getElementById("draw");
 var ctx = canvas.getContext("2d");
-//access width and height(for sizing)
 var container = document.getElementById("container");
-//setting variable modelHelper as blank
-//(model helper is a class with handpose facemesh 
-//enabled so user doesnt have to instantiate it)
-//STOP UNDOING HERE!
 var modelHelper;
-const pose = new Pose({locateFile: (file) => {
-  return `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`;
-}});
-pose.setOptions({
-  upperBodyOnly: true,
-  smoothLandmarks: true,
-  minDetectionConfidence: 0.5,
-  minTrackingConfidence: 0.5
-});
-var result;
-pose.onResults((results) => {result = results; /*console.log(results)*/});
-
-//var mpHolistic;
-//shouldStop checks whether or not to stop the program
 var shouldStop = true;
 //initialize scene(blank world)
 var scene = new Scene();
@@ -257,48 +52,30 @@ var ocamera = new OrthographicCamera(-canvas.width/2, canvas.width/2, -canvas.he
 var pcamera = new PerspectiveCamera( 45, 1, 1, 1000 );
 var debug = false;
 var controls = {};
-//uses orthographic or perspective camera based on debug variable
 var camera;
 if(debug){
     camera = pcamera;
 } else {
     camera = ocamera;
 }
-//initialize Renderer
 var renderer = new WebGLRenderer({alpha: true, antialias:true,preserveDrawingBuffer:true});
-//render settings
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.shadowMap.enabled = true;
-//renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-// renderer.toneMapping = THREE.ACESFilmicToneMapping;
-// renderer.toneMappingExposure = 0.8;
-// renderer.outputEncoding = THREE.sRGBEncoding;
 renderer.outputEncoding = sRGBEncoding;
-//Loading elements
 var loader = document.getElementById("loader");
 var loadtext = document.getElementById("loading-text");
-//Width and height variable(possible for resizing idk)
 let photolist = document.getElementById("photolist");
-//playedOnce variable to check how many times video.addeventlistener(playing)
-//executed. Sometimes it may run twice but idk really i may not need it
 var playedOnce = false;
-//Checks to see if I can start program
-var canStart = false;
-//adds renderer to html
 renderer.domElement.id = "rendererCanvas";
 container.appendChild(renderer.domElement)
-//initialize OrbitControls(to look around scene)
 var orbitControls = new OrbitControls(camera, renderer.domElement);
-////console.log(orbitControls);\
-//used to reset orbitControls
 var camToSave = {};
 camToSave.position = camera.position.clone();
 camToSave.rotation = camera.rotation.clone();
 camToSave.controlCenter = orbitControls.target.clone();
-//sets renderer size to proper width and height
 renderer.setSize( canvas.width, canvas.height );
+
 async function startVideo(){
-    //initializes video
     var constraints = { audio: false, video: { width: canvas.width, height: canvas.height} }; 
     try{
         var stream = await navigator.mediaDevices.getUserMedia(constraints);
@@ -308,17 +85,13 @@ async function startVideo(){
     }
 }
 function setWidths(){
-    //sets width of canvas based on screen size
-//    const w =Math.min(window.innerWidth, window.innerHeight)/1.5;
     const w = window.innerWidth/2.5;
     const h = window.innerHeight/1.5;
-
     let ps = document.getElementById("photosection");
-
+    let ctrl = document.getElementById("controlls");
     ps.style.width = w/2 + 50 + "px";
     photolist.style.height = h + "px";
     photolist.style.width = w/2 + 50 + "px";
-//    const h = Math.min(window.innerWidth, window.innerHeight)/1.5;
     container.width = w;
     container.height = h;
     container.style.width = w + "px";
@@ -340,7 +113,6 @@ setWidths();
 resize();
 startVideo();
 function resize(){
-    //resizes three.js camera based on screen size
     camera.left = -.5 * canvas.width;
     camera.right = .5 * canvas.width;
     camera.top = -.5 * canvas.height;
@@ -355,44 +127,27 @@ window.addEventListener("resize", async () => {
 
 video.addEventListener("playing", async () => {
     if(!playedOnce){
-        //sets loader state to loading
         loader.className = "loading-state"
         loadtext.innerText = "Status: Loading Model"
-        //initializes model helper(see class)
         modelHelper = new ModelHelper();
         await modelHelper.load(canvas.width, canvas.height);
-        
-//        mpHolistic = new MPHolistic();
-//        mpFacemesh = new MPFacemesh();
-//        mpPose = new MPPose();
-        canStart = true;
+        // canStart = true;
         console.log("CAN START LOL");
         playedOnce = true;
         loader.className = "dormant-state"
         loadtext.innerText = "Status: idle";
     }
 })
-function startLandmarkVideo() {
-    shouldStop = false;
-    window.requestAnimationFrame(getLandmarks)
-}
+
 function setLighting(){
-//    const light = new PointLight(0xffffff, 2, 5);
-//    light.position.set(0, 10, 0);
-//    scene.add(light);
     var hemiLight = new HemisphereLight( 0xffffbb, 0x080820, 1 );
     scene.add( hemiLight );
-    //Stop undoing here
     new RGBELoader()
 		.setDataType( UnsignedByteType )
-    //https://threejs.org/examples/textures/equirectangular/royal_esplanade_1k.hdr
 		.load( './assets/royal_esplanade_1k.hdr', function ( texture ) {
-
 		var envMap = pmremGenerator.fromEquirectangular( texture ).texture;
-
 		scene.background = envMap;
 		scene.environment = envMap;
-
 		texture.dispose();
 		pmremGenerator.dispose();
     })
@@ -406,21 +161,22 @@ const FRAMES_PER_SECOND = 20;  // Valid values are 60,30,20,15,10...
 const FRAME_MIN_TIME = (1000/60) * (60 / FRAMES_PER_SECOND) - (1000/60) * 0.5;
 var lastFrameTime = 0;  // the last frame time
 
-//UNDOING
-async function predict(){
-//    subpredict(videoElement)
-    console.log("here");
-    
-    console.log("here1");
-    await pose.send({image: video})
-    console.log("here2");
-//    console.log("ok")
-//    window.requestAnimationFrame(predict)
-}
 
 async function startThreeJS(){
+    const pose = new Pose({locateFile: (file) => {
+        return `https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.2/${file}`;
+    }});
+    pose.setOptions({
+        upperBodyOnly: true,
+        smoothLandmarks: true,
+        minDetectionConfidence: 0.5,
+        minTrackingConfidence: 0.5
+    });
+
     
-    
+    var result;
+    pose.onResults((results) => {result = results; /*console.log(results)*/});
+
     shouldStop = false;
     //sets loader to loading
     loader.className = "loading-state"
@@ -493,6 +249,7 @@ async function startThreeJS(){
 
         
         let t0 = performance.now()
+        // console.log("hoi")
         await pose.send({image: video})
  
         if(!shouldStop){
@@ -505,24 +262,7 @@ async function startThreeJS(){
 //            await setTimeout(() => {}, )
             window.requestAnimationFrame(startThreeJSAnimation);
         }
-//        console.log(faceLandmarks);
-//        console.log(handLandmarks);
-//        console.log(poseLandmarks);
-        //if not stop then play animation
 
-        
-//        var holistic = await mpHolistic.predict(video);
-//        mpPose.predict(video)
-//            console.log("here");
-            
-//            console.log("here1");
-//            await pose.send({image: video})
-//            console.log("here2");
-        //    console.log("ok")
-//            window.requestAnimationFrame(predict)
-        //UNDOING
-//        predict()
-        
         
         var faceLandmarks = await modelHelper.predictFace(video);
         

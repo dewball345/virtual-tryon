@@ -137,10 +137,15 @@ h1{
     margin: 40px;
 }
 
-#photolist{
+/* #photolist{
 	overflow:hidden; 
 	overflow-y:scroll;
-	/* height:200px; */
+	/* height:200px; 
+} */
+
+.scroller{
+	overflow:hidden; 
+	overflow-y:scroll;
 }
 
 #photosection{
