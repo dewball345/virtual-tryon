@@ -24,6 +24,8 @@ import {Hat} from './jewelery/hat.js';
 //import {RGBELoader} from "https://cdn.jsdelivr.net/npm/three@0.116.1/examples/jsm/loaders/RGBELoader.js"
 import {RGBELoader} from "../third-party/RGBELoader.js";
 import {GuiHelper} from "./helpers/guiHelper.js";
+import {MeshCreateHelper} from "./helpers/meshCreateHelper.js";
+
 import {
     Scene, 
     OrthographicCamera, 
@@ -184,21 +186,35 @@ async function startThreeJS(){
     setLighting();
     //adds earrings to scene
     loadtext.innerText = "Adding Earrings"
-    var leftEarring = new EarringLeft(await EarringLeft.create(
-        settings.earrings.earringType == "Option 1" ? './obj/earrings/untitled.obj' : './obj/earrings/secondearring.obj'));
+
+
+    var ePath = './obj/earrings/earringotherglb.glb';
+
+    if(settings.earrings.earringType == "Option 1"){
+        ePath = './obj/earrings/earringtest.glb'
+    }
+    //TODO: change for multiple meshes options.
+    var leftEarring = new EarringLeft(await MeshCreateHelper.createGLTF(
+        ePath));
+
     scene.add(leftEarring.mesh);
-    var rightEarring = new EarringRight(await EarringRight.create(
-        settings.earrings.earringType == "Option 1" ? './obj/earrings/untitled.obj' : './obj/earrings/secondearring.obj'));
+    var rightEarring = new EarringRight(await MeshCreateHelper.createGLTF(
+        ePath));
+
     scene.add(rightEarring.mesh); 
     //adds necklace to scene
     loadtext.innerText = "Adding Necklace"
-    if(settings.necklace.necklaceType == "Option 1"){
-        var necklace = new Necklace(await Necklace.create("./obj/necklace/necklace.obj"));
-        scene.add(necklace.mesh);       
-    } else {
-        var necklace = new Necklace(await Necklace.create("./obj/necklace/necklace2.obj"));
-        scene.add(necklace.mesh);
-    }
+    // if(settings.necklace.necklaceType == "Option 1"){
+    //     var necklace = new Necklace(await Necklace.create("./obj/necklace/necklace.obj"));
+    //     scene.add(necklace.mesh);       
+    // } else {
+    //     var necklace = new Necklace(await Necklace.create("./obj/necklace/necklace2.obj"));
+    //     scene.add(necklace.mesh);
+    // }
+
+    var necklace = new Necklace(await MeshCreateHelper.createGLTF('./obj/necklace/necklace.glb'));
+    scene.add(necklace.mesh);
+
     //adds other jewelry to scene
     loadtext.innerText = "Adding Nosering"
     var noseRing = new NoseRing(NoseRing.create());
@@ -207,7 +223,8 @@ async function startThreeJS(){
     var bottu = new Bottu(Bottu.create());
     scene.add(bottu.mesh)
     loadtext.innerText = "Adding Goggles"
-    var goggles = new Goggles(await Goggles.createGLTF("./obj/sungoggles/sungoggles.glb"));
+    
+    var goggles = new Goggles(await MeshCreateHelper.createGLTF("./obj/sungoggles/sungoggles.glb", 'goggles'));
     scene.add(goggles.mesh);
     loadtext.innerText = "Adding Hat"
     var hat = new Hat(await Hat.createGLTF("./obj/hat/hat.glb"));
@@ -302,6 +319,13 @@ async function startThreeJS(){
         } else {
             leftEarring.show();
             rightEarring.show();
+
+            if(settings.earrings.earringType == "Option 1"){
+                ePath = './obj/earrings/earringtest.glb'
+            } else {
+                ePath = './obj/earrings/earringotherglb.glb'
+            }
+
             await leftEarring.update({
                 poses: result, 
                 camera: camera, 
@@ -312,7 +336,7 @@ async function startThreeJS(){
                 yOff: settings.earrings.left.yOff,
                 zOff: settings.earrings.left.zOff,
                 scaleOff:settings.earrings.left.scaleOff,
-                earringPath: settings.earrings.earringType == "Option 1" ? './obj/earrings/untitled.obj' : './obj/earrings/secondearring.obj',
+                earringPath: ePath,
                 adaptive: true,
                 rotX: settings.earrings.left.xRot,
                 rotY: settings.earrings.left.yRot,
@@ -328,7 +352,7 @@ async function startThreeJS(){
                 yOff: settings.earrings.right.yOff,
                 zOff: settings.earrings.right.zOff,
                 scaleOff:settings.earrings.right.scaleOff,
-                earringPath: settings.earrings.earringType == "Option 1" ? './obj/earrings/untitled.obj' : './obj/earrings/secondearring.obj',
+                earringPath: ePath,
                 adaptive: true,
                 rotX: settings.earrings.right.xRot,
                 rotY: settings.earrings.right.yRot,

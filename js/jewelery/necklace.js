@@ -93,6 +93,7 @@ export class Necklace{
             });
         });
     }
+    
     hide(){
         //console.log(this.mesh);
         this.mesh.visible = false;

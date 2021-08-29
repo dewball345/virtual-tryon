@@ -45,24 +45,8 @@ export class Goggles{
                 y2: domPosRight.y})/23 + scaleOff);
         }
     }
-    static async createGLTF(objPath) {
-        this.path = objPath;
-        return new Promise(async (resolve, reject) => {
-            const gltfLoader = new GLTFLoader();
-//            objLoader.setMaterials(material);
-            var loader = gltfLoader.load(objPath, (result) => {
-//                root.children[0].material = material.materials['TextureAtlas_1001.001'];
-                var root = result.scene
-                root.scale.setScalar(10);
-                root.name = "goggles";
-                root.castShadow = true; 
-                root.receiveShadow = true;
-                //root.rotation.x = -90;
-                resolve(root);
-                console.log("Called!")
-            });
-        });
-    }
+    
+
     hide(){
         //console.log(this.mesh);
         this.mesh.visible = false;
