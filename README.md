@@ -1,3 +1,2 @@
 # virtual-tryon
-Simple virtual tryon thing
-stuff in md folder
+Proof-of-concept virtual tryon framework thru on-device edge models
